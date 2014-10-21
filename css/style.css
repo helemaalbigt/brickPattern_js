@@ -1,0 +1,40 @@
+body {
+	font-family: "Arial";
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.color-box {
+	float: left;
+	width: 30px;
+	height: 30px;
+	margin: 5px;
+	border: 1px solid black;
+}
+
+.submenu {
+	clear: both;
+}
+
+#sidebar_wrapper {
+	display: block;
+	float: left;
+	width: 260px;
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	padding:20px;
+	border-right: solid gray 1px;
+}
+
+#sidebar {
+
+}
+
+
+
+#content {
+	display:block
+}
