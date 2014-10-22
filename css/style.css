@@ -1,8 +1,11 @@
 body {
-	font-family: "Arial";
-	height: 100%;
-	margin: 0;
-	padding: 0;
+    bottom: 0;
+    font-family: "Arial";
+    left: 0;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 .color-box {
@@ -15,6 +18,10 @@ body {
 
 .submenu {
 	clear: both;
+}
+
+#document_presets input{
+	width:50px;
 }
 
 #sidebar_wrapper {
@@ -36,5 +43,17 @@ body {
 
 
 #content {
-	display:block
+   display: block;
+    height: 100%;
+    padding-left: 300px;
+}
+
+#canvas_wrapper{
+	height: 100%;
+    width: 100%;
+}
+
+#canvas{
+	height: 100%;
+    width: 100%;
 }
