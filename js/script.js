@@ -70,7 +70,7 @@ function refresh() {
 }
 
 /**
- * brick class
+ * CLASS brick 
  *
  * @param float
  * @param float

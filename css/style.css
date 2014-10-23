@@ -11,8 +11,8 @@ body {
 .color-box {
 	float: left;
 	width: 30px;
-	height: 30px;
-	margin: 5px;
+	height: 15px;
+	margin: 5px 5px 5px 0;
 	border: 1px solid black;
 }
 
@@ -32,7 +32,7 @@ body {
 	top:0;
 	bottom:0;
 	left:0;
-	padding:20px;
+	padding: 0 20px;
 	border-right: solid gray 1px;
 }
 
