@@ -29,7 +29,7 @@ var c2 = new fabric.Color('rgb(30,30,30)');
 var c3 = new fabric.Color('rgb(50,50,50)');
 var c4 = new fabric.Color('rgb(70,70,70)');
 var c5 = new fabric.Color('rgb(90,90,90)');
-var c6 = new fabric.Color('rgb(200,0,200)');
+var c6;
 //Joints
 var jointThickness = 1;
 //real joint thickness in cm
@@ -62,10 +62,12 @@ $(document).ready(function() {
 	canvas.setHeight($("#canvas_wrapper").height());
 	//disable renderOnAddRemove to increase performance
 	canvas.renderOnAddRemove = false;
+	
+	c6 = new fabric.Color('rgb(200,0,200)');
 });
 
 function refresh() {
-	var b = new Brick(0, 0, bw, bh, c1);
+	var b = new Brick(0, 0, bw, bh, c6);
 	b.draw();
 }
 
@@ -96,7 +98,7 @@ Brick.prototype.draw = function() {
 	 var rect = new fabric.Rect({
 		 left : this.xPos,
 		 top : this.yPos,
-		 fill : 'gray',
+		 fill : 'rgb(200,0,200)',
 		 width : this.brickW,
 		 height : this.brickH,
 		 stroke : jc,
