@@ -64,6 +64,11 @@
 							<input class="input" type="text" name="bh" id="bh" value="16">
 							<span> cm</span>
 						</div>
+						<div>
+							<span>Offset</span>
+							<input class="input" type="text" name="offset" id="offset" value="0">
+							<span> cm</span>
+						</div>
 						<br>
 						<button onclick="refresh()">GENERATE</button>
 					</div>
@@ -114,7 +119,7 @@
 		<!-- CONTENT -->
 		<div id="content">
 			<div id="canvas_wrapper">
-				<canvas id="canvas"></canvas>
+				<canvas id="canvas" width="400" height="300"></canvas>
 			</div>
 		</div>
 	</body>

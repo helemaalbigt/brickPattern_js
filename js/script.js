@@ -15,17 +15,12 @@ var bw = 32;//real width of brick in cm
 var bh = 16;//real heigth of brick in cm
 var pxW = 32;//brick absolute width in pixels
 var pxH = 16;//brick absolute height in pixels
+var offset = 0;//offset each row of bricks should have relative to the previous one
 //Colors
 var brickColors = new Array();//array containing all possible brick colors
-var c1 = new fabric.Color('rgb(10,10,10)');
-var c2 = new fabric.Color('rgb(30,30,30)');
-var c3 = new fabric.Color('rgb(50,50,50)');
-var c4 = new fabric.Color('rgb(70,70,70)');
-var c5 = new fabric.Color('rgb(90,90,90)');
-var c6 = new fabric.Color('rgb(100,0,0)');
+
 //Joints
 var jointThickness = 1;//real joint thickness in cm
-var jc = new fabric.Color('rgb(160,160,160)');
 //Draw
 var drawmode = "uniform";
 
@@ -50,13 +45,15 @@ $(document).ready(function() {
 	}).css('background-color', '#ff8800');
 
 	/*
-	 * initialize fabric canvas
+	 * initialize canvas
 	 */
-	canvas = new fabric.Canvas('canvas');
-	canvas.setWidth($("#canvas_wrapper").width());
-	canvas.setHeight($("#canvas_wrapper").height());
-	//disable renderOnAddRemove to increase performance
-	canvas.renderOnAddRemove = false;
+	//resize
+	$("#canvas").attr("width",$("#canvas_wrapper").width());
+	$("#canvas").attr("height",$("#canvas_wrapper").height());
+	//define variables
+	canvas = document.getElementById("canvas");
+	ctx = canvas.getContext("2d");
+
 
 	/*
 	 * add eventlistener to all parameters and update them
@@ -68,13 +65,25 @@ $(document).ready(function() {
 });
 
 function refresh() {
-	canvas.clear().renderAll();
+	//clear canvas
+	canvas.width = canvas.width;
+	//update all inputparameter
 	updateParameters();
-	for(var w =0; w<fw; w+=bw){
-		for(var h =0; h<fh; h+=bh){
+	//calculate the offset to be used
+	var os = offset%bw;
+	var osTotal = 0;
+	//generate all the bricks
+	for(var h =0; h<fh; h+=bh){
+		for(var w =0; w<fw; w+=bw){
 			//console.log(h+" "+bh+" "+fh);
-			var b = new Brick(w, h, bw, bh, c6);
+			var b = new Brick(w + osTotal, h, bw, bh, "rgb(200,100,60)");
 			b.draw();
+		}
+		//handle offset Total
+		if(osTotal+os<(bw)){
+			osTotal+=os;
+		}  else{
+			osTotal = 0;
 		}
 	}
 	
@@ -88,6 +97,7 @@ function updateParameters(){
 	fh = parseInt($('#fh').val());
 	bw = parseInt($('#bw').val());
 	bh = parseInt($('#bh').val());
+	offset = parseInt($('#offset').val());
 }
 
 /**
@@ -97,7 +107,7 @@ function updateParameters(){
  * @param float
  * @param float
  * @param float
- * @param fabric.Color
+ * @param Color
  */
 function Brick(xPos, yPos, brickW, brickH, c) {
 	this.xPos = xPos;
@@ -114,21 +124,11 @@ function Brick(xPos, yPos, brickW, brickH, c) {
  * @return
  */
 Brick.prototype.draw = function() {
-
-	var rect = new fabric.Rect({
-		left : this.xPos,
-		top : this.yPos,
-		fill : 'rgb(200,0,200)',
-		width : this.brickW,
-		height : this.brickH,
-		stroke : jc,
-		strokeWidth : 1,
-		hasControls : false,
-		hasRotatingPoint : false,
-		hasBorders : false,
-		evented : false
-	});
-
-	canvas.add(rect);
-	canvas.renderAll();
+	ctx.beginPath();
+    ctx.rect(this.xPos,this.yPos,this.brickW,this.brickH);
+    ctx.fillStyle = this.c;
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
 }
