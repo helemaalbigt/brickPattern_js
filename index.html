@@ -76,13 +76,13 @@
 					<div id="color_selection" class="submenu">
 						<h3>colors</h3>
 						<span>n° colors</span>
-						<select class="input" >
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-							<option>6</option>
+						<select id="nc" class="input" >
+							<option value="1" >1</option>
+							<option value="2" >2</option>
+							<option value="3" >3</option>
+							<option value="4" >4</option>
+							<option value="5" >5</option>
+							<option value="6" selected>6</option>
 						</select>
 						<div id="colors">
 							<div class="color-box"></div>
@@ -94,10 +94,10 @@
 						</div>
 					</div>
 					<!-- DRAW MODE -->
-					<div id="drawmode" class="submenu">
+					<div class="submenu">
 						<br>
 						<h3>draw mode</h3>
-						<select class="input">
+						<select class="input" id="drawmode">
 							<option>uniform</option>
 							<option>random</option>
 							<option>perlin noise</option>
