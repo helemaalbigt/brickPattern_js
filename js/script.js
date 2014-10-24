@@ -65,6 +65,7 @@ $(document).ready(function() {
 	 * Put all colors in array
 	 */
 	brickColors = [c1,c2,c3,c4,c5,c6];
+	
 
 	/*
 	 * initialize canvas
@@ -83,6 +84,15 @@ $(document).ready(function() {
 	$( ".input" ).change(function() {
   		updateParameters();
 	});
+	updateParameters();
+	
+	/*
+	 * Hide unused colors
+	 */
+	$("#nc").change(function() {
+		updateColorpickers();
+	});
+	updateColorpickers();
 
 });
 
@@ -100,7 +110,6 @@ function refresh() {
 	$("#canvas").attr("height",fh);
 	
 	//rescale canvas to screen size
-	console.log(fh+"-"+$("#canvas_wrapper").height());
 	//if one of the borders crosses the screen, resize
 	if(fw>$("#canvas_wrapper").width() || fh>$("#canvas_wrapper").height()){
 		//determine scalefactor
@@ -120,7 +129,6 @@ function refresh() {
 	//generate all the bricks
 	for(var h =0; h<fh; h+=bh){
 		for(var w =0; w<fw+bw; w+=bw){
-			//console.log(h+" "+bh+" "+fh);
 			var b = new Brick(w - osTotal, h, bw, bh, pickColor());
 			b.draw();
 		}
@@ -152,7 +160,23 @@ function updateParameters(){
 }
 
 /**
- *Updates all parameter 
+ * Hides unused pickcolors
+ */
+function updateColorpickers(){
+	var numItems = $('.yourclass').length
+	
+	var c = 0;
+	$('.color-box').each(function() {
+		console.log(c+" "+nc);
+		var display = (c<nc) ? "block" : "none";
+		$(this).css("display", display);
+		c++;	
+	});
+}
+
+
+/**
+ *Updates all parameter s
  * 
  * @return String Color in hex format
  */
@@ -195,7 +219,6 @@ function Brick(xPos, yPos, brickW, brickH, c) {
  * @return
  */
 Brick.prototype.draw = function() {
-	console.log(this.c);
 	ctx.beginPath();
     ctx.rect(this.xPos,this.yPos,this.brickW,this.brickH);
     ctx.fillStyle = this.c;
