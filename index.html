@@ -70,19 +70,18 @@
 							<span> cm</span>
 						</div>
 						<br>
-						<button onclick="refresh()">GENERATE</button>
 					</div>
 					<!-- COLOR SELECTION -->
 					<div id="color_selection" class="submenu">
-						<h3>colors</h3>
+						<h3>color pattern</h3>
 						<span>n° colors</span>
 						<select id="nc" class="input" >
 							<option value="1" >1</option>
 							<option value="2" >2</option>
-							<option value="3" >3</option>
+							<option value="3" selected>3</option>
 							<option value="4" >4</option>
 							<option value="5" >5</option>
-							<option value="6" selected>6</option>
+							<option value="6" >6</option>
 						</select>
 						<div id="colors">
 							<div class="color-box"></div>
@@ -96,7 +95,6 @@
 					<!-- DRAW MODE -->
 					<div class="submenu">
 						<br>
-						<h3>draw mode</h3>
 						<select class="input" id="drawmode">
 							<option>uniform</option>
 							<option>random</option>
@@ -107,11 +105,12 @@
 							<option>photo reference</option>
 						</select>
 					</div>
+					<br>
+					<button onclick="refresh()">DRAW</button>
 					<!-- SAVE -->
 					<div id="save" class="submenu">
 						<h3>save</h3>
-						<button>SVG &#65516;</button>
-						<button>PNG &#65516;</button>
+						<a class="buttonlink" id="download_png" download="brickpattern.png">PNG &#65516;</a>
 					</div>
 				</div>
 			</div>

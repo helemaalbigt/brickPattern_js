@@ -93,6 +93,27 @@ $(document).ready(function() {
 		updateColorpickers();
 	});
 	updateColorpickers();
+	
+	/*
+	 * Downloads
+	 */
+	var link = document.getElementById('download_png');
+	link.addEventListener('click', downloadImage, false);
+	
+	function downloadImage() {
+		//reset and redraw canvas to full size
+		prepareCanvas();
+		drawBricks();
+		
+		var canvas = document.getElementById("canvas");
+		var fileName = "brickpattern";
+		link.download = fileName + ".png";
+		var dt = canvas.toDataURL('image/png');
+		this.href = dt;
+		
+		//redraw back to small size
+		refresh();
+	};
 
 });
 
@@ -101,14 +122,27 @@ $(document).ready(function() {
  *Main Refresh function, used to generate and draw the bricks 
  */
 function refresh() {
+	updateParameters();
+	prepareCanvas();
+	fitCanvasToScreen();	
+	drawBricks();	
+}
+
+/**
+ * Prepare Canvas for drawing
+ */
+function prepareCanvas(){
 	//clear canvas
 	canvas.width = canvas.width;
-	//update all inputparameter
-	updateParameters();
 	//resize canvas to facade size
 	$("#canvas").attr("width",fw);
 	$("#canvas").attr("height",fh);
-	
+}
+
+/**
+ *Rescales the canvas to fit the screen 
+ */
+function fitCanvasToScreen(){
 	//rescale canvas to screen size
 	//if one of the borders crosses the screen, resize
 	if(fw>$("#canvas_wrapper").width() || fh>$("#canvas_wrapper").height()){
@@ -121,7 +155,13 @@ function refresh() {
 		scaleFactor = 1;
 	} 
 	ctx.scale(scaleFactor,scaleFactor);
-		
+}
+
+/**
+ *Calculates and draws all bricks 
+ */
+function drawBricks(){
+			    	console.log("----------------");
 	//Calculate brick positions
 	//calculate the offset to be used
 	var os = offset%bw;
@@ -129,13 +169,12 @@ function refresh() {
 	//generate all the bricks
 	for(var h =0; h<fh; h+=bh){
 		for(var w =0; w<fw+bw; w+=bw){
-			var b = new Brick(w - osTotal, h, bw, bh, pickColor());
+			var b = new Brick(w - osTotal, h, bw, bh, pickColor(w-osTotal,h));
 			b.draw();
 		}
 		//handle offset Total counter
 		osTotal = (osTotal+os<(bw)) ? (osTotal+os) : 0;
 	}
-	
 }
 
 /**
@@ -167,7 +206,6 @@ function updateColorpickers(){
 	
 	var c = 0;
 	$('.color-box').each(function() {
-		console.log(c+" "+nc);
 		var display = (c<nc) ? "block" : "none";
 		$(this).css("display", display);
 		c++;	
@@ -180,13 +218,75 @@ function updateColorpickers(){
  * 
  * @return String Color in hex format
  */
-function pickColor(){
+function pickColor(w,h){
 	var returnString = "";
 	
 	switch (drawmode) { 
 	    case 'random': 
 	        returnString = brickColors[Math.floor(Math.random() * (nc))];
 	        break;
+	        
+	    case 'gradient horizontal':
+	    	//only calculate if more than 1 color is selected; otherwise always select color 1
+	    	if(nc>1 && w > 0){
+	    		/*
+	    		 * Calculate Weight Distribution
+	    		 */
+		    	//equal distance interval between which we switch colors
+		    	var gradientInterval = (nc>1) ? fw/(nc-1) : fw;
+		    
+		    	//array with weights per color
+		    	var colorWeights = new Array();
+		    	//array with cutoffpoints  (x1---x2-------x3)
+		    	var cutoffPoints = new Array();
+		    	//populate arrays
+		    	for(var i = 0; i<(nc); i++){
+		    		var weight = (i>0) ? 0 : 100;
+		    		colorWeights.push(weight);
+		    		cutoffPoints.unshift(fw-i*gradientInterval);
+		    	}
+		    	
+		    	for(var j = 0; j+1<colorWeights.length; j++){
+		    		if(cutoffPoints[j] <= w && w < cutoffPoints[j+1]){
+		    			//value of current position remapped as value between 0 and 100
+		    			var weightedValue = ((100*(w-cutoffPoints[j]))/(cutoffPoints[j+1] - cutoffPoints[j]));
+		    			colorWeights[j] = 100 - weightedValue;
+		    			colorWeights[j+1] = weightedValue;
+		    			//if(j==0) console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" "+weightedValue+" - "+colorWeights[j]+" "+colorWeights[j+1]);
+		    		} else{
+		    			//only set weight to 0 if the revious loop didnt affect this value (to avoid overriding it)
+		    			if(!(cutoffPoints[j-1] <= w && w < cutoffPoints[j])) colorWeights[j] = 0;
+		    			//console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" - "+colorWeights[j]+" "+colorWeights[j+1]);
+		    		}
+		    	}
+		    	
+		    	/*
+		    	 * Pick Color Based On Weights
+		    	 */
+		    	//get sum of all weights
+		    	var weightTotal = 0;
+				for(var l = 0; l< colorWeights.length; l++){
+   					 weightTotal += colorWeights[l];
+				}		
+				//random number based on sum
+				var rand = Math.floor((Math.random() * weightTotal) + 1);
+				//find color the rand. belongs to
+				var totalWeightChecked = colorWeights[0];
+				for(var k = 0; k < colorWeights.length; k++){
+					if(totalWeightChecked>rand){
+						returnString = brickColors[k];
+						//if(k==0) console.log(k+" | "+rand+" | colorweight 0: "+colorWeights[k]+" colorweight 1: "+colorWeights[k+1]+" totalweight: "+weightTotal+" totalweigthChecked: "+totalWeightChecked);
+						break;
+					} else{
+						totalWeightChecked += colorWeights[k+1];
+					}
+				}
+	
+	    	} else{
+	    		returnString = brickColors[0];
+	    	}
+	    	 break;
+	    	
 	    default:
 	        returnString = brickColors[0];
 	        break;
@@ -194,6 +294,37 @@ function pickColor(){
 	
 	return returnString;
 }
+
+/**
+ *Distributes gradient weigths to colors over a given length fw for the current position w 
+ */
+function distributeWeights(fw,w){
+	//array with weights per color
+	var colorWeights = new Array();
+	//array with cutoffpoints  (x1---x2-------x3)
+	var cutoffPoints = new Array();
+	//populate arrays
+	for(var i = 0; i<(nc); i++){
+		var weight = (i>0) ? 0 : 100;
+		colorWeights.push(weight);
+		cutoffPoints.unshift(fw-i*gradientInterval);
+	}
+	
+	for(var j = 0; j+1<colorWeights.length; j++){
+		if(cutoffPoints[j] <= w && w < cutoffPoints[j+1]){
+			//value of current position remapped as value between 0 and 100
+			var weightedValue = ((100*(w-cutoffPoints[j]))/(cutoffPoints[j+1] - cutoffPoints[j]));
+			colorWeights[j] = 100 - weightedValue;
+			colorWeights[j+1] = weightedValue;
+			//if(j==0) console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" "+weightedValue+" - "+colorWeights[j]+" "+colorWeights[j+1]);
+		} else{
+			//only set weight to 0 if the revious loop didnt affect this value (to avoid overriding it)
+			if(!(cutoffPoints[j-1] <= w && w < cutoffPoints[j])) colorWeights[j] = 0;
+			//console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" - "+colorWeights[j]+" "+colorWeights[j+1]);
+		}
+	}
+}
+
 
 /**
  * CLASS brick
@@ -226,4 +357,15 @@ Brick.prototype.draw = function() {
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'black';
     ctx.stroke();
+}
+
+/*
+ *Saving images 
+ */
+
+/**
+ *Saves a png 
+ */
+function downloadCanvas() {
+
 }
