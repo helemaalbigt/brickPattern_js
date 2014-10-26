@@ -19,16 +19,16 @@ var offset = 0;//offset each row of bricks should have relative to the previous 
 //Colors
 var brickColors = new Array();//array containing all possible brick colors
 var nc = 6;
-var c1 = "#c95d38";
-var c2 = "#c95d38";
-var c3 = "#c95d38";
-var c4 = "#c95d38";
-var c5 = "#c95d38";
-var c6 = "#c95d38";
+var c1 = "#32201e";
+var c2 = "#3f403b";
+var c3 = "#9c9777";
+var c4 = "#d52b1e";
+var c5 = "#d52b1e";
+var c6 = "#d52b1e";
 //Joints
 var jointThickness = 1;//real joint thickness in cm
 //Draw
-var drawmode = "uniform";
+var drawmode = "random";
 
 //Canvas
 var canvas;
@@ -38,18 +38,38 @@ var ctx;
 $(document).ready(function() {
 
 	/*
+	 * Put all colors in array
+	 */
+	brickColors = [c1,c2,c3,c4,c5,c6];
+	
+
+	/*
 	 * append hidden input with hex value behind brickcolor boxes
 	 */
-	var colorboxcounter = 1;
+	var colorboxcounter = 0;
 	$('.color-box').each(function() {
-    	$(this).after("<input id=\"c"+colorboxcounter+"\" type=\"hidden\" value=\"#c95d38\"></input>");
+		//append hidden input
+    	$(this).after("<input id=\"c"+(colorboxcounter+1)+"\" type=\"hidden\" value=\""+brickColors[colorboxcounter]+"\"></input>");
+    	//create brickcolor boxes
+    	$(this).colpick({
+			colorScheme : 'dark',
+			layout : 'rgbhex',
+			color : brickColors[colorboxcounter],
+			onSubmit : function(hsb, hex, rgb, el) {
+				$(el).css('background-color', '#' + hex);
+				$(el).colpickHide();
+				$(el).next().attr("value",'#' + hex);
+				updateParameters();
+			}
+		}).css('background-color', brickColors[colorboxcounter]);
+		
 		colorboxcounter++;
 	});
 	
 	/*
 	 * create the brickcolor boxes
 	 */
-	$('.color-box').colpick({
+	/*$('.color-box').colpick({
 		colorScheme : 'dark',
 		layout : 'rgbhex',
 		color : '#c95d38',
@@ -59,13 +79,7 @@ $(document).ready(function() {
 			$(el).next().attr("value",'#' + hex);
 			updateParameters();
 		}
-	}).css('background-color', '#c95d38');
-	
-	/*
-	 * Put all colors in array
-	 */
-	brickColors = [c1,c2,c3,c4,c5,c6];
-	
+	}).css('background-color', '#c95d38');*/
 
 	/*
 	 * initialize canvas
@@ -114,7 +128,8 @@ $(document).ready(function() {
 		//redraw back to small size
 		refresh();
 	};
-
+	
+	refresh();
 });
 
 
@@ -122,7 +137,7 @@ $(document).ready(function() {
  *Main Refresh function, used to generate and draw the bricks 
  */
 function refresh() {
-	updateParameters();
+	//updateParameters();
 	prepareCanvas();
 	fitCanvasToScreen();	
 	drawBricks();	
@@ -161,7 +176,7 @@ function fitCanvasToScreen(){
  *Calculates and draws all bricks 
  */
 function drawBricks(){
-			    	console.log("----------------");
+	console.log("----------------");
 	//Calculate brick positions
 	//calculate the offset to be used
 	var os = offset%bw;
@@ -196,6 +211,8 @@ function updateParameters(){
 	brickColors[5] = $('#c6').val();
 	
 	drawmode = $('#drawmode').val();
+	
+	refresh();
 }
 
 /**
@@ -225,6 +242,15 @@ function pickColor(w,h){
 	    case 'random': 
 	        returnString = brickColors[Math.floor(Math.random() * (nc))];
 	        break;
+	        
+	    case 'perlin noise' :
+	    	//generate value between 0 and 1 with perlin noise
+	    	var x = w/fw; // normalize w
+	    	var y = h/fh; // normalize h
+			var size = 5;  // pick a scaling value
+			var n = PerlinNoise.noise( size*x, size*y, .8 );
+			returnString = gradientGetColor(1,n);
+	    	break;
 	    
 	    case 'gradient vertical':
 	    	returnString = gradientGetColor(fh,h);
@@ -257,7 +283,7 @@ function pickColor(w,h){
  * @param
  * @return
  */
-function gradientGetColor(L,w){
+function gradientGetColor(L,w,cutoffPoints){
 	//only calculate if more than 1 color is selected; otherwise always select color 1
 	if(nc>1 && w > 0){
 		//equal distance interval between which we switch colors
@@ -271,6 +297,11 @@ function gradientGetColor(L,w){
 		for(var i = 0; i<(nc); i++){
 			var weight = (i>0) ? 0 : 100;
 			colorWeights.push(weight);
+			cutoffPoints.unshift(L-i*gradientInterval);
+		}
+		
+		var cutoffPoints = new Array();
+		for(var i = 0; i<(nc); i++){
 			cutoffPoints.unshift(L-i*gradientInterval);
 		}
 		
@@ -324,15 +355,15 @@ function pickWeightedRandom(weigths){
 }
 
 
-/**
- * CLASS brick
- *
- * @param float
- * @param float
- * @param float
- * @param float
- * @param Color
- */
+/********************************************
+ * CLASS brick								*
+ *											*
+ * @param float								*	
+ * @param float								*
+ * @param float								*	
+ * @param float								*	
+ * @param Color								*
+ ********************************************/
 function Brick(xPos, yPos, brickW, brickH, c) {
 	this.xPos = xPos;
 	this.yPos = yPos;

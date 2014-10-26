@@ -22,8 +22,10 @@
 		<link rel="stylesheet" href="css/colpick.css" type="text/css"/>
 		<!-- JAVASCRIPT LINKS -->
 		<script src='js/jquery-1.11.1.min.js' type="text/javascript"></script>
+		<!-- source: http://colpick.com/plugin-->
 		<script src='js/colpick.js' type='text/javascript'></script>
-		<script src='js/fabric.js' type='text/javascript'></script>
+		<!-- source: https://github.com/josephg/noisejs -->
+		<script src='js/perlin.js' type='text/javascript'></script>
 		<script src='js/script.js' type='text/javascript'></script>
 	</head>
 
@@ -33,6 +35,12 @@
 			<div id="sidebar">
 				<h1>brickpatterns</h1>
 				<div id="menu">
+					
+					<!-- TABS -->
+					<!--<ul id="navigation">
+					    <li><a id="tab1" class="selected" href="javascript:void(0);">Generated</a></li>
+					    <li><a id="tab2" href="javascript:void(0);">Image Based</a></li>
+					</ul>-->
 					
 					<!-- DOCUMENT PRESETS -->
 					<div id="document_presets" class="submenu">
@@ -77,8 +85,8 @@
 						<span>n° colors</span>
 						<select id="nc" class="input" >
 							<option value="1" >1</option>
-							<option value="2" >2</option>
-							<option value="3" selected>3</option>
+							<option value="2" selected>2</option>
+							<option value="3" >3</option>
 							<option value="4" >4</option>
 							<option value="5" >5</option>
 							<option value="6" >6</option>
@@ -97,7 +105,7 @@
 						<br>
 						<select class="input" id="drawmode">
 							<option>uniform</option>
-							<option>random</option>
+							<option selected>random</option>
 							<option>perlin noise</option>
 							<option>gradient vertical</option>
 							<option>gradient horizontal</option>
@@ -107,7 +115,7 @@
 						</select>
 					</div>
 					<br>
-					<button onclick="refresh()">DRAW</button>
+					<!--<button onclick="refresh()">DRAW</button>-->
 					<!-- SAVE -->
 					<div id="save" class="submenu">
 						<h3>save</h3>
