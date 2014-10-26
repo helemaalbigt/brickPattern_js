@@ -225,67 +225,22 @@ function pickColor(w,h){
 	    case 'random': 
 	        returnString = brickColors[Math.floor(Math.random() * (nc))];
 	        break;
+	    
+	    case 'gradient vertical':
+	    	returnString = gradientGetColor(fh,h);
+	    	break;
 	        
 	    case 'gradient horizontal':
-	    	//only calculate if more than 1 color is selected; otherwise always select color 1
-	    	if(nc>1 && w > 0){
-	    		/*
-	    		 * Calculate Weight Distribution
-	    		 */
-		    	//equal distance interval between which we switch colors
-		    	var gradientInterval = (nc>1) ? fw/(nc-1) : fw;
-		    
-		    	//array with weights per color
-		    	var colorWeights = new Array();
-		    	//array with cutoffpoints  (x1---x2-------x3)
-		    	var cutoffPoints = new Array();
-		    	//populate arrays
-		    	for(var i = 0; i<(nc); i++){
-		    		var weight = (i>0) ? 0 : 100;
-		    		colorWeights.push(weight);
-		    		cutoffPoints.unshift(fw-i*gradientInterval);
-		    	}
-		    	
-		    	for(var j = 0; j+1<colorWeights.length; j++){
-		    		if(cutoffPoints[j] <= w && w < cutoffPoints[j+1]){
-		    			//value of current position remapped as value between 0 and 100
-		    			var weightedValue = ((100*(w-cutoffPoints[j]))/(cutoffPoints[j+1] - cutoffPoints[j]));
-		    			colorWeights[j] = 100 - weightedValue;
-		    			colorWeights[j+1] = weightedValue;
-		    			//if(j==0) console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" "+weightedValue+" - "+colorWeights[j]+" "+colorWeights[j+1]);
-		    		} else{
-		    			//only set weight to 0 if the revious loop didnt affect this value (to avoid overriding it)
-		    			if(!(cutoffPoints[j-1] <= w && w < cutoffPoints[j])) colorWeights[j] = 0;
-		    			//console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" - "+colorWeights[j]+" "+colorWeights[j+1]);
-		    		}
-		    	}
-		    	
-		    	/*
-		    	 * Pick Color Based On Weights
-		    	 */
-		    	//get sum of all weights
-		    	var weightTotal = 0;
-				for(var l = 0; l< colorWeights.length; l++){
-   					 weightTotal += colorWeights[l];
-				}		
-				//random number based on sum
-				var rand = Math.floor((Math.random() * weightTotal) + 1);
-				//find color the rand. belongs to
-				var totalWeightChecked = colorWeights[0];
-				for(var k = 0; k < colorWeights.length; k++){
-					if(totalWeightChecked>rand){
-						returnString = brickColors[k];
-						//if(k==0) console.log(k+" | "+rand+" | colorweight 0: "+colorWeights[k]+" colorweight 1: "+colorWeights[k+1]+" totalweight: "+weightTotal+" totalweigthChecked: "+totalWeightChecked);
-						break;
-					} else{
-						totalWeightChecked += colorWeights[k+1];
-					}
-				}
-	
-	    	} else{
-	    		returnString = brickColors[0];
-	    	}
-	    	 break;
+	    	returnString = gradientGetColor(fw,w);
+	    	break;
+	    	
+	   	case 'gradient diagonal down':
+	    	returnString = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow(h, 2)));
+	    	break;
+	    
+	    case 'gradient diagonal up':
+	    	returnString = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow((fh-h), 2)));
+	    	break;
 	    	
 	    default:
 	        returnString = brickColors[0];
@@ -296,33 +251,76 @@ function pickColor(w,h){
 }
 
 /**
- *Distributes gradient weigths to colors over a given length fw for the current position w 
+ *Gets color for gradient over a given length L for the current position w 
+ *
+ * @param
+ * @param
+ * @return
  */
-function distributeWeights(fw,w){
-	//array with weights per color
-	var colorWeights = new Array();
-	//array with cutoffpoints  (x1---x2-------x3)
-	var cutoffPoints = new Array();
-	//populate arrays
-	for(var i = 0; i<(nc); i++){
-		var weight = (i>0) ? 0 : 100;
-		colorWeights.push(weight);
-		cutoffPoints.unshift(fw-i*gradientInterval);
+function gradientGetColor(L,w){
+	//only calculate if more than 1 color is selected; otherwise always select color 1
+	if(nc>1 && w > 0){
+		//equal distance interval between which we switch colors
+		var gradientInterval = (nc>1) ? L/(nc-1) : L;
+			    	
+		//array with weights per color
+		var colorWeights = new Array();
+		//array with cutoffpoints  (x1---x2-------x3)
+		var cutoffPoints = new Array();
+		//populate arrays
+		for(var i = 0; i<(nc); i++){
+			var weight = (i>0) ? 0 : 100;
+			colorWeights.push(weight);
+			cutoffPoints.unshift(L-i*gradientInterval);
+		}
+		
+		for(var j = 0; j+1<colorWeights.length; j++){
+			if(cutoffPoints[j] <= w && w < cutoffPoints[j+1]){
+				//value of current position remapped as value between 0 and 100
+				var weightedValue = ((100*(w-cutoffPoints[j]))/(cutoffPoints[j+1] - cutoffPoints[j]));
+				colorWeights[j] = 100 - weightedValue;
+				colorWeights[j+1] = weightedValue;
+				//if(j==0) console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" "+weightedValue+" - "+colorWeights[j]+" "+colorWeights[j+1]);
+			} else{
+				//only set weight to 0 if the previous loop didnt affect this value (to avoid overriding it)
+				if(!(cutoffPoints[j-1] <= w && w < cutoffPoints[j])) colorWeights[j] = 0;
+				//console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" - "+colorWeights[j]+" "+colorWeights[j+1]);
+			}
+		}
+		
+		return brickColors[pickWeightedRandom(colorWeights)];
+	} else{
+		return brickColors[0];
 	}
+}
+
+/**
+ *Weighted Random Picker 
+ * 
+ * @param
+ * @return
+ */
+function pickWeightedRandom(weigths){
+	var returnValue = 0;
 	
-	for(var j = 0; j+1<colorWeights.length; j++){
-		if(cutoffPoints[j] <= w && w < cutoffPoints[j+1]){
-			//value of current position remapped as value between 0 and 100
-			var weightedValue = ((100*(w-cutoffPoints[j]))/(cutoffPoints[j+1] - cutoffPoints[j]));
-			colorWeights[j] = 100 - weightedValue;
-			colorWeights[j+1] = weightedValue;
-			//if(j==0) console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" "+weightedValue+" - "+colorWeights[j]+" "+colorWeights[j+1]);
+	//get sum of all weights
+	var weightTotal = 0;
+	for(var l = 0; l< weigths.length; l++){
+		 weightTotal += weigths[l];
+	}		
+	//random number based on sum
+	var rand = Math.floor((Math.random() * weightTotal) + 1);
+	//find color the rand. belongs to
+	var totalWeightChecked = weigths[0];
+	for(var k = 0; k < weigths.length; k++){
+		if(totalWeightChecked>=rand){
+			returnValue = k;
+			break;
 		} else{
-			//only set weight to 0 if the revious loop didnt affect this value (to avoid overriding it)
-			if(!(cutoffPoints[j-1] <= w && w < cutoffPoints[j])) colorWeights[j] = 0;
-			//console.log(cutoffPoints[j]+" "+cutoffPoints[j+1]+" "+w+" - "+colorWeights[j]+" "+colorWeights[j+1]);
+			totalWeightChecked += weigths[k+1];
 		}
 	}
+	return returnValue;
 }
 
 
