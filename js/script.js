@@ -29,6 +29,11 @@ var c6 = "#d52b1e";
 var jointThickness = 1;//real joint thickness in cm
 //Draw
 var drawmode = "random";
+//Image
+var imageUploaded = false;
+var img = null;
+var imgW = 0;
+var imgH = 0;
 
 //Canvas
 var canvas;
@@ -196,11 +201,32 @@ function drawBricks(){
  *Updates all parameter 
  */
 function updateParameters(){
-	fw = parseInt($('#fw').val());
-	fh = parseInt($('#fh').val());
+	//if hadeling images, preserve aspect ration
+	if(imageUploaded){
+		//check whether width or height was adjusted
+		if(fw!=$('#fw').val()){
+			fh = fh*(parseInt($('#fw').val())/fw);
+			fw = parseInt($('#fw').val());
+			//change input box value
+			$( "#fh" ).attr( "value", fh );
+			$( "#fh" ).val( fh );
+		} else if(fh!=$('#fh').val()){
+			fw = fw*(parseInt($('#fh').val())/fh);
+			fh = parseInt($('#fh').val());
+			//change input box value
+			$( "#fw" ).attr( "value", fw );
+			$( "#fw" ).val( fw );
+		}
+		
+	} else{
+		fw = parseInt($('#fw').val());
+		fh = parseInt($('#fh').val());
+	}
+	
 	bw = parseInt($('#bw').val());
 	bh = parseInt($('#bh').val());
 	offset = parseInt($('#offset').val());
+	
 	
 	nc = parseInt($('#nc').val());
 	brickColors[0] = $('#c1').val();
@@ -352,6 +378,48 @@ function pickWeightedRandom(weigths){
 		}
 	}
 	return returnValue;
+}
+
+/*
+ * Handles uploaded images
+ */
+//activate fileselect
+function onFileSelected(event) {
+	var selectedFile = event.target.files[0];
+	var reader = new FileReader();
+	imgInputFocus = true;
+
+	//changethe miniature image seen in the sidebar
+	var imgtag = document.getElementById("input_img");
+	imgtag.title = selectedFile.name;
+	//create an offscreen image the same size as the orignal image
+	//this is done bcs the sidebar image will be made smaller to fit in the sidebar
+	//this image will be used by the canvas to generate the pattern
+	var canvasImage = $('<img id="canvasImage">').addClass("canvasImage")[0];
+	//canvasImage.addClass("canvasImage");
+	canvasImage.title = selectedFile.name;
+
+	reader.onload = function(event) {
+		imgtag.src = event.target.result;
+		canvasImage.src = event.target.result;
+		//as soon as the image has loaded completely, assign it to 'img' and refresh the canvas
+		canvasImage.onload = function(event) {
+			img = canvasImage;
+			//change fw and fh to image dimensions
+			imgW = img.width;
+			fw = imgW ;
+			imageUploaded = true;
+			$( "#fw" ).attr( "value", fw );
+			$( "#fw" ).val( fw );
+			imgH = img.height;
+			fh = imgH;
+			$( "#fh" ).attr( "value", fh );
+			$( "#fh" ).val( fh );
+			
+			refresh();
+		}
+	};
+	reader.readAsDataURL(selectedFile);
 }
 
 
