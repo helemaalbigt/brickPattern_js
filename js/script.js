@@ -29,6 +29,9 @@ var c6 = "#d52b1e";
 var jointThickness = 1;//real joint thickness in cm
 //Draw
 var drawmode = "random";
+var pScale = 5;
+var gradientDirection = "horizontal";
+var em = 0; //GRADIENT: edge margin
 //Image
 var imageUploaded = false;
 var img = null;
@@ -49,7 +52,7 @@ $(document).ready(function() {
 	
 
 	/*
-	 * append hidden input with hex value behind brickcolor boxes
+	 * append hidden input with hex value behind brickcolor boxes, also create them boxes
 	 */
 	var colorboxcounter = 0;
 	$('.color-box').each(function() {
@@ -70,21 +73,6 @@ $(document).ready(function() {
 		
 		colorboxcounter++;
 	});
-	
-	/*
-	 * create the brickcolor boxes
-	 */
-	/*$('.color-box').colpick({
-		colorScheme : 'dark',
-		layout : 'rgbhex',
-		color : '#c95d38',
-		onSubmit : function(hsb, hex, rgb, el) {
-			$(el).css('background-color', '#' + hex);
-			$(el).colpickHide();
-			$(el).next().attr("value",'#' + hex);
-			updateParameters();
-		}
-	}).css('background-color', '#c95d38');*/
 
 	/*
 	 * initialize canvas
@@ -104,6 +92,10 @@ $(document).ready(function() {
   		updateParameters();
 	});
 	updateParameters();
+	
+	/*
+	 * update visability for drawmode
+	 */
 	
 	/*
 	 * Hide unused colors
@@ -238,6 +230,32 @@ function updateParameters(){
 	
 	drawmode = $('#drawmode').val();
 	
+	pScale = parseInt($('#pScale').val());
+	em = parseInt($('#em').val());
+	gradientDirection = $('#gradientDirection').val()
+	
+	//handke visibility for drawmode options
+	$('.drawmode_options').each(function() {
+		$(this).hide();
+	});
+	//make elements visible based on selected
+	switch (drawmode) { 
+	    case 'gradient': 
+	    	$("#gradient_direction").show();
+	    	$("#gradient_margin").show();
+	    	break;
+	    	
+	    case 'perlin noise': 
+	    	$("#perlin_scale").show();
+	    	//$("#gradient_margin").show();
+	    	break;
+	    	
+	   	case 'photo reference': 
+	    	$("#image_upload").show();
+	    	break;
+	    	
+	}
+	
 	refresh();
 }
 
@@ -273,28 +291,35 @@ function pickColor(w,h){
 	    	//generate value between 0 and 1 with perlin noise
 	    	var x = w/fw; // normalize w
 	    	var y = h/fh; // normalize h
-			var size = 5;  // pick a scaling value
+			var size = pScale;  // pick a scaling value
 			var n = PerlinNoise.noise( size*x, size*y, .8 );
-			returnString = gradientGetColor(1,n);
-	    	break;
-	    
-	    case 'gradient vertical':
-	    	returnString = gradientGetColor(fh,h);
-	    	break;
-	        
-	    case 'gradient horizontal':
-	    	returnString = gradientGetColor(fw,w);
+			returnString = gradientGetColor(1,n,em);
 	    	break;
 	    	
-	   	case 'gradient diagonal down':
-	    	returnString = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow(h, 2)));
-	    	break;
-	    
-	    case 'gradient diagonal up':
-	    	returnString = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow((fh-h), 2)));
+	    case 'gradient':
+	    	//check direction
+	    	switch(gradientDirection) {
+	    		case 'vertical':
+	    			returnString = gradientGetColor(fh,h,em);
+	    			break;
+	    			
+	    		case 'diagonal down':
+	    			returnString = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow(h, 2)),em);
+	    			break;
+	    		
+	    		case 'diagonal up':
+	    			returnString = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow((fh-h), 2)),em);
+	    			break;
+	    		
+	    		default:
+	    			//horizontal gradient by default
+	    			returnString = gradientGetColor(fw,w,em);
+	    			break;
+	    	}
 	    	break;
 	    	
 	    default:
+	    	//uniform by default
 	        returnString = brickColors[0];
 	        break;
 	}
@@ -307,13 +332,14 @@ function pickColor(w,h){
  *
  * @param
  * @param
+ * @param float edgeMargin
  * @return
  */
-function gradientGetColor(L,w,cutoffPoints){
+function gradientGetColor(L,w,edgeMargin){
 	//only calculate if more than 1 color is selected; otherwise always select color 1
 	if(nc>1 && w > 0){
 		//equal distance interval between which we switch colors
-		var gradientInterval = (nc>1) ? L/(nc-1) : L;
+		var gradientInterval = (nc>1) ? (L-(edgeMargin*2))/(nc-1) : L;
 			    	
 		//array with weights per color
 		var colorWeights = new Array();
@@ -323,16 +349,30 @@ function gradientGetColor(L,w,cutoffPoints){
 		for(var i = 0; i<(nc); i++){
 			var weight = (i>0) ? 0 : 100;
 			colorWeights.push(weight);
-			cutoffPoints.unshift(L-i*gradientInterval);
-		}
-		
-		var cutoffPoints = new Array();
-		for(var i = 0; i<(nc); i++){
-			cutoffPoints.unshift(L-i*gradientInterval);
+			cutoffPoints.unshift((L-edgeMargin)-i*gradientInterval);
 		}
 		
 		for(var j = 0; j+1<colorWeights.length; j++){
-			if(cutoffPoints[j] <= w && w < cutoffPoints[j+1]){
+			console.log(colorWeights.length);
+			//positioned within the edgemargins with constant color
+			if(w<=edgeMargin){
+				if(j==0){
+					colorWeights[j]=100;
+				}else{
+					colorWeights[j]=0;
+				}
+			} else if(w>=(L-edgeMargin)){
+				//console.log(j+" - "+(nc-1));
+				if((j+1)==(nc-1)){
+					colorWeights[j+1]=100;
+					colorWeights[j]=0;
+				}else{
+					colorWeights[j]=0;
+				}
+				//alert("ok "+w+" "+(fw-em));
+			} 
+			//positioned within the gradient area
+			else if(cutoffPoints[j] <= w && w < cutoffPoints[j+1]){
 				//value of current position remapped as value between 0 and 100
 				var weightedValue = ((100*(w-cutoffPoints[j]))/(cutoffPoints[j+1] - cutoffPoints[j]));
 				colorWeights[j] = 100 - weightedValue;

@@ -50,12 +50,12 @@
 						</div>
 						<div>
 							<span>W</span>
-							<input class="input" type="text" name="fw" id="fw" value="1200">
+							<input class="input smallinput" type="text" name="fw" id="fw" value="1200">
 							<span> cm</span>
 						</div>
 						<div>
 							<span>H</span>
-							<input class="input" type="text" name="fh" id="fh" value="900">
+							<input class="input smallinput" type="text" name="fh" id="fh" value="900">
 							<span> cm</span>
 						</div>
 						<br>
@@ -64,28 +64,22 @@
 						</div>
 						<div>
 							<span>W</span>
-							<input class="input" type="text" name="bw" id="bw" value="60">
+							<input class="input smallinput" type="text" name="bw" id="bw" value="60">
 							<span> cm</span>
 						</div>
 						<div>
 							<span>H</span>
-							<input class="input" type="text" name="bh" id="bh" value="14">
+							<input class="input smallinput" type="text" name="bh" id="bh" value="14">
 							<span> cm</span>
 						</div>
 						<div>
 							<span>Offset</span>
-							<input class="input" type="text" name="offset" id="offset" value="20">
+							<input class="input smallinput" type="text" name="offset" id="offset" value="20">
 							<span> cm</span>
 						</div>
 						<br>
 					</div>
 					
-					<!-- IMAGE UPLOAD-->
-					<div id="image_upload" class="submenu">
-						<h3>upload image</h3>
-						<img id="input_img">
-						<input id="img_input" type="file" name="img" onchange="onFileSelected(event)">
-					</div>
 					
 					<!-- COLOR SELECTION -->
 					<div id="color_selection" class="submenu">
@@ -115,12 +109,39 @@
 							<option>uniform</option>
 							<option selected>random</option>
 							<option>perlin noise</option>
-							<option>gradient vertical</option>
-							<option>gradient horizontal</option>
-							<option>gradient diagonal down</option>
-							<option>gradient diagonal up</option>
+							<option>gradient</option>
 							<option>photo reference</option>
 						</select>
+						<br><br>
+						
+						<div class="drawmode_options" id="perlin_scale">
+							<span>scale</span>
+							<input class="input smallinput" type="text" name="pScale" id="pScale" value="5">
+						</div>
+						
+						<div class="drawmode_options" id="gradient_direction">
+							<span>direction</span>
+							<select class="input" id="gradientDirection">
+								<option selected>horizontal</option>
+								<option>vertical</option>
+								<option>diagonal down</option>
+								<option>diagonal up</option>
+							</select>
+						</div>
+						
+						<div class="drawmode_options" id="gradient_margin">
+							<span>margin</span>
+							<input class="input smallinput" type="text" name="em" id="em" value="0">
+							<span> cm</span>
+						</div>
+						
+						<!-- IMAGE UPLOAD-->
+						<div id="image_upload" class="drawmode_options">
+							<img id="input_img">
+							<input id="img_input" type="file" name="img" onchange="onFileSelected(event)">
+							NOT IMPLEMENTED YET!
+						</div>
+						
 					</div>
 					<br>
 					<!--<button onclick="refresh()">DRAW</button>-->
