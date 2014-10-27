@@ -19,9 +19,9 @@ var offset = 0;//offset each row of bricks should have relative to the previous 
 //Colors
 var brickColors = new Array();//array containing all possible brick colors
 var nc = 6;
-var c1 = "#32201e";
-var c2 = "#3f403b";
-var c3 = "#9c9777";
+var c1 = "#6f6f6f";
+var c2 = "#858585";
+var c3 = "#909090";
 var c4 = "#d52b1e";
 var c5 = "#d52b1e";
 var c6 = "#d52b1e";
@@ -193,8 +193,8 @@ function drawBricks(){
  *Updates all parameter 
  */
 function updateParameters(){
-	//if hadeling images, preserve aspect ration
-	if(imageUploaded){
+	//if handeling images, preserve aspect ration
+	if(imageUploaded && drawmode == "photo reference"){
 		//check whether width or height was adjusted
 		if(fw!=$('#fw').val()){
 			fh = fh*(parseInt($('#fw').val())/fw);
@@ -202,7 +202,9 @@ function updateParameters(){
 			//change input box value
 			$( "#fh" ).attr( "value", fh );
 			$( "#fh" ).val( fh );
-		} else if(fh!=$('#fh').val()){
+		} 
+		//if not set dilmensions to given input
+		else if(fh!=$('#fh').val()){
 			fw = fw*(parseInt($('#fh').val())/fh);
 			fh = parseInt($('#fh').val());
 			//change input box value

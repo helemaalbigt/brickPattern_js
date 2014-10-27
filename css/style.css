@@ -21,7 +21,7 @@ body {
 	clear: both;
 }
 
-#document_presets input{
+.smallinput{
 	width:50px;
 }
 
