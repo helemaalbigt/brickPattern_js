@@ -19,8 +19,8 @@ var offset = 0;//offset each row of bricks should have relative to the previous 
 //Colors
 var brickColors = new Array();//array containing all possible brick colors
 var nc = 6;
-var c1 = "#6f6f6f";
-var c2 = "#858585";
+var c1 = "#e0e0e0";
+var c2 = "#b8b8b8";
 var c3 = "#909090";
 var c4 = "#d52b1e";
 var c5 = "#d52b1e";
