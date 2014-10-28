@@ -8,7 +8,7 @@ body {
     top: 0;
 }
 
-.color-box {
+.color-box{
 	float: left;
 	width: 30px;
 	height: 15px;
@@ -17,12 +17,21 @@ body {
 	display: block;
 }
 
+ .color-box-joints{
+ 		
+ 	width: 30px;
+	height: 15px;
+	margin: 5px 5px 5px 0;
+	border: 1px solid black;
+	display: block;
+ }
+
 .submenu {
 	clear: both;
 }
 
 .smallinput{
-	width:50px;
+	width:40px;
 }
 
 #sidebar_wrapper {

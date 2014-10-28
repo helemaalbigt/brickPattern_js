@@ -16,6 +16,9 @@ var bh = 16;//real heigth of brick in cm
 var pxW = 32;//brick absolute width in pixels
 var pxH = 16;//brick absolute height in pixels
 var offset = 0;//offset each row of bricks should have relative to the previous one
+//Joints
+var jt = 1; //joint thickness
+var jc = "#424242"; //joint color
 //Colors
 var brickColors = new Array();//array containing all possible brick colors
 var nc = 6;
@@ -44,16 +47,34 @@ var ctx;
 
 //do everything that needs to be done when document loads
 $(document).ready(function() {
+	
+	/*
+	 * JOINTS
+	 */
+	//create joint color box and hidden color value
+	$('.color-box-joints').each(function() {
+		//append hidden input
+    	$(this).after("<input id=\"jc\" type=\"hidden\" value=\""+jc+"\"></input>");
+    	//create brickcolor boxes
+    	$(this).colpick({
+			colorScheme : 'dark',
+			layout : 'rgbhex',
+			color : brickColors[colorboxcounter],
+			onSubmit : function(hsb, hex, rgb, el) {
+				$(el).css('background-color', '#' + hex);
+				$(el).colpickHide();
+				$(el).next().attr("value",'#' + hex);
+				updateParameters();
+			}
+		}).css('background-color', jc);
+	});
 
 	/*
-	 * Put all colors in array
+	 * BRICKS
 	 */
 	brickColors = [c1,c2,c3,c4,c5,c6];
-	
 
-	/*
-	 * append hidden input with hex value behind brickcolor boxes, also create them boxes
-	 */
+	//append hidden input with hex value behind brickcolor boxes, also create them boxes
 	var colorboxcounter = 0;
 	$('.color-box').each(function() {
 		//append hidden input
@@ -75,7 +96,7 @@ $(document).ready(function() {
 	});
 
 	/*
-	 * initialize canvas
+	 * CANVAS
 	 */
 	//resize
 	$("#canvas").attr("width",$("#canvas_wrapper").width());
@@ -92,10 +113,6 @@ $(document).ready(function() {
   		updateParameters();
 	});
 	updateParameters();
-	
-	/*
-	 * update visability for drawmode
-	 */
 	
 	/*
 	 * Hide unused colors
@@ -221,7 +238,11 @@ function updateParameters(){
 	bh = parseInt($('#bh').val());
 	offset = parseInt($('#offset').val());
 	
+	//joints
+	jt = parseInt($('#jt').val());
+	jc = $('#jc').val();
 	
+	//brick colors
 	nc = parseInt($('#nc').val());
 	brickColors[0] = $('#c1').val();
 	brickColors[1] = $('#c2').val();
@@ -493,9 +514,11 @@ Brick.prototype.draw = function() {
     ctx.rect(this.xPos,this.yPos,this.brickW,this.brickH);
     ctx.fillStyle = this.c;
     ctx.fill();
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'black';
-    ctx.stroke();
+    if(jt>0){
+	    ctx.lineWidth = jt;
+	    ctx.strokeStyle = jc;
+	    ctx.stroke();
+    }
 }
 
 /*
