@@ -17,13 +17,12 @@ body {
 	display: block;
 }
 
- .color-box-joints{
- 		
+ .color-box-joints{		
  	width: 30px;
 	height: 15px;
-	margin: 5px 5px 5px 0;
+	margin: 0 10px 0 0;
 	border: 1px solid black;
-	display: block;
+	display:inline-block;
  }
 
 .submenu {
@@ -37,7 +36,7 @@ body {
 #sidebar_wrapper {
 	display: block;
 	float: left;
-	width: 260px;
+	width: 230px;
 	position:absolute;
 	top:0;
 	bottom:0;
@@ -55,7 +54,7 @@ body {
 #content {
    display: block;
     height: 100%;
-    padding-left: 300px;
+    padding-left: 270px;
 }
 
 #canvas_wrapper{
@@ -105,4 +104,23 @@ right:1px;
 
 #input_img{
 	width:220px;
+}
+
+.inputpart{
+	clear:both;
+	float:right;
+}
+
+.inputline{
+	clear:both;
+}
+
+.smallinput{
+	text-align:right;
+}
+
+.small_info{
+	font-size:80%;
+	font-style:italic;
+	color:gray;
 }
