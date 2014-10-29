@@ -196,8 +196,8 @@ function drawBricks(){
 	var os = offset%bw;
 	var osTotal = 0;
 	//generate all the bricks
-	for(var h =0; h<fh; h+=(bh+jt)){
-		for(var w =0; w<fw+bw; w+=(bw+jt)){
+	for(var h =0; h<fh; h+=bh){
+		for(var w =0; w<fw+bw; w+=bw){
 			var b = new Brick(w - osTotal, h, bw, bh, pickColor(w-osTotal,h));
 			b.draw();
 		}
@@ -511,7 +511,7 @@ function Brick(xPos, yPos, brickW, brickH, c) {
  */
 Brick.prototype.draw = function() {
 	ctx.beginPath();
-    ctx.rect(this.xPos,this.yPos,this.brickW+jt,this.brickH+jt);
+    ctx.rect(this.xPos,this.yPos,this.brickW,this.brickH);
     ctx.fillStyle = this.c;
     ctx.fill();
     if(jt>0){
