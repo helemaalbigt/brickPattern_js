@@ -17,41 +17,30 @@ body {
 	display: block;
 }
 
- .color-box-joints{
- 		
+ .color-box-joints{		
  	width: 30px;
 	height: 15px;
-	margin: 5px 5px 5px 0;
+	margin: 0 10px 0 0;
 	border: 1px solid black;
-	display: block;
+	display:inline-block;
+	  position: relative;
+    top: 3px;
  }
 
 .submenu {
 	clear: both;
 }
 
-.input_subtitle{
-	clear:both;
-}
-
 .smallinput{
 	width:40px;
-//	font-size:105%;
-}
-
-.textfield_input{
-	clear:both;
-	float:right;
-}
-
-.smallinput:focus{
- 
+	border:none;
+	border-bottom:solid 1px lightgray;
 }
 
 #sidebar_wrapper {
 	display: block;
 	float: left;
-	width: 260px;
+	width: 230px;
 	position:absolute;
 	top:0;
 	bottom:0;
@@ -69,7 +58,7 @@ body {
 #content {
    display: block;
     height: 100%;
-    padding-left: 300px;
+    padding-left: 280px;
 }
 
 #canvas_wrapper{
@@ -119,4 +108,22 @@ right:1px;
 
 #input_img{
 	width:220px;
+}
+
+.inputpart{
+	clear:both;
+	float:right;
+}
+
+.inputline{
+	clear:both;
+}
+
+.smallinput{
+	text-align:right;
+}
+
+.small_info{
+	font-size:95%;
+	color:gray;
 }
