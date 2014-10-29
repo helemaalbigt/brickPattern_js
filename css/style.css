@@ -30,8 +30,22 @@ body {
 	clear: both;
 }
 
+.input_subtitle{
+	clear:both;
+}
+
 .smallinput{
 	width:40px;
+//	font-size:105%;
+}
+
+.textfield_input{
+	clear:both;
+	float:right;
+}
+
+.smallinput:focus{
+ 
 }
 
 #sidebar_wrapper {
