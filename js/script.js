@@ -28,14 +28,6 @@ var c3 = "#909090";
 var c4 = "#d52b1e";
 var c5 = "#d52b1e";
 var c6 = "#d52b1e";
-//Color Weights
-var brickColorWeights = new Array();//array containing all brick color weights
-var cw1 = 100;
-var cw2 = 100;
-var cw3 = 100;
-var cw4 = 100;
-var cw5 = 100;
-var cw6 = 100;
 //Joints
 var jointThickness = 1;//real joint thickness in cm
 //Draw
@@ -75,14 +67,12 @@ $(document).ready(function() {
 				updateParameters();
 			}
 		}).css('background-color', jc);
-		
 	});
 
 	/*
 	 * BRICKS
 	 */
 	brickColors = [c1,c2,c3,c4,c5,c6];
-	brickColorWeights = [cw1,cw2,cw3,cw4,cw5,cw6];
 
 	//append hidden input with hex value behind brickcolor boxes, also create them boxes
 	var colorboxcounter = 0;
@@ -220,10 +210,6 @@ function drawBricks(){
  *Updates all parameter 
  */
 function updateParameters(){
-	/*
-	 *INPUT DATA 
-	 */
-	
 	//if handeling images, preserve aspect ration
 	if(imageUploaded && drawmode == "photo reference"){
 		//check whether width or height was adjusted
@@ -241,7 +227,8 @@ function updateParameters(){
 			//change input box value
 			$( "#fw" ).attr( "value", fw );
 			$( "#fw" ).val( fw );
-		}	
+		}
+		
 	} else{
 		fw = parseInt($('#fw').val());
 		fh = parseInt($('#fh').val());
@@ -266,19 +253,9 @@ function updateParameters(){
 	
 	drawmode = $('#drawmode').val();
 	
-	brickColorWeights[0] = parseInt($('#cw1').val());
-	brickColorWeights[1] = parseInt($('#cw2').val());
-	brickColorWeights[2] = parseInt($('#cw3').val());
-	brickColorWeights[3] = parseInt($('#cw4').val());
-	brickColorWeights[4] = parseInt($('#cw5').val());
-	brickColorWeights[5] = parseInt($('#cw6').val());
 	pScale = parseInt($('#pScale').val());
 	em = parseInt($('#em').val());
 	gradientDirection = $('#gradientDirection').val()
-	
-	/*
-	 * VISIBILITY
-	 */
 	
 	//handke visibility for drawmode options
 	$('.drawmode_options').each(function() {
@@ -286,10 +263,6 @@ function updateParameters(){
 	});
 	//make elements visible based on selected
 	switch (drawmode) { 
-		case 'random':
-			$("#random_options").show();
-			break;
-		
 	    case 'gradient': 
 	    	$("#gradient_direction").show();
 	    	$("#gradient_margin").show();
@@ -305,38 +278,18 @@ function updateParameters(){
 	    	break;
 	    	
 	}
-	//updates colors of the weight boxes in the random option
-	updateColorWeightBoxes();
 	
 	refresh();
 }
 
-/*
- * Updates colors of all color weight boxes
- */
-function updateColorWeightBoxes(){
-	var counter = 0;
-	$('.color-box-weights_preview').each(function() {
-		$(this).css('background-color', brickColors[counter]);
-		counter++;
-	});
-}
-
 /**
- * Hides unused pickcolors (and the random weight counterpart)
+ * Hides unused pickcolors
  */
 function updateColorpickers(){
 	var numItems = $('.yourclass').length
 	
 	var c = 0;
 	$('.color-box').each(function() {
-		var display = (c<nc) ? "block" : "none";
-		$(this).css("display", display);
-		c++;	
-	});
-	
-	c = 0;
-	$('.color-box-weights').each(function() {
 		var display = (c<nc) ? "block" : "none";
 		$(this).css("display", display);
 		c++;	
@@ -354,13 +307,7 @@ function pickColor(w,h){
 	
 	switch (drawmode) { 
 	    case 'random': 
-	    	//create a new array with only the weights of the selected colors
-	    	var reducedWeightsArray = new Array();
-	    	for(var i = 0; i<nc; i++){
-	    		reducedWeightsArray.push(brickColorWeights[i]); 
-	    	}
-	    	returnString = brickColors[pickWeightedRandom(reducedWeightsArray)];
-	        //returnString = brickColors[Math.floor(Math.random() * (nc))];
+	        returnString = brickColors[Math.floor(Math.random() * (nc))];
 	        break;
 	        
 	    case 'perlin noise' :
@@ -572,4 +519,15 @@ Brick.prototype.draw = function() {
 	    ctx.strokeStyle = jc;
 	    ctx.stroke();
     }
+}
+
+/*
+ *Saving images 
+ */
+
+/**
+ *Saves a png 
+ */
+function downloadCanvas() {
+
 }
