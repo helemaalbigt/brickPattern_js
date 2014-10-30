@@ -72,16 +72,19 @@
 						<div class="inputline">
 							<span title="(color + thickness) the color and thickness of the joint. Set to 0 for no joint" class="linetitle">joint</span> 
 							<span class="inputpart">
-								<span class="color-box-joints"></span>
+								
 								<span class="small_info">t: </span><input class="input smallinput" type="text" name="jt" id="jt" value="1">
 								<span class="small_info"> cm</span>
 							</span>
 						</div>
-						<div>
-							<span></span>
-							
+						<div class="inputline">
+							<span class="inputpart">
+								<span class="color-box-joints"></span>
+							</span>
 						</div>
 					</div>
+					
+					<br><br>
 					
 					
 					<!-- COLOR SELECTION -->
@@ -117,36 +120,81 @@
 						</select>
 						<br><br>
 						
-						<div class="drawmode_options" id="perlin_scale">
+						<!--random options-->
+						<div class="drawmode_options inputline" id="random_options">
+							<span>weights</span>
+							<span class="inputpart">
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c1w" id="cw1" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c2w" id="cw2" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c3w" id="cw3" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c4w" id="cw4" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c5w" id="cw5" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c6w" id="cw6" value="100">
+									<span class="small_info"> %</span>
+								</div>				
+							</span>			
+						</div>
+						
+						<!--perlin options-->
+						<div class="drawmode_options inputline" id="perlin_scale">
 							<span>scale</span>
-							<input class="input smallinput" type="text" name="pScale" id="pScale" value="5">
+							<span class="inputpart">
+								<input class="input smallinput" type="text" name="pScale" id="pScale" value="5">
+							</span>
 						</div>
 						
-						<div class="drawmode_options" id="gradient_direction">
+						<!--gradient options-->
+						<div class="drawmode_options inputline" id="gradient_direction">
 							<span>direction</span>
-							<select class="input" id="gradientDirection">
-								<option selected>horizontal</option>
-								<option>vertical</option>
-								<option>diagonal down</option>
-								<option>diagonal up</option>
-							</select>
+							<span class="inputpart">
+								<select class="input" id="gradientDirection">
+									<option selected>horizontal</option>
+									<option>vertical</option>
+									<option>diagonal down</option>
+									<option>diagonal up</option>
+								</select>
+							</span>
 						</div>
 						
-						<div class="drawmode_options" id="gradient_margin">
+						<div class="drawmode_options inputline" id="gradient_margin">
 							<span>margin</span>
-							<input class="input smallinput" type="text" name="em" id="em" value="0">
-							<span> cm</span>
+							<span class="inputpart">
+								<input class="input smallinput" type="text" name="em" id="em" value="0">
+								<span class="small_info"> cm</span>
+							</span>
 						</div>
 						
 						<!-- IMAGE UPLOAD-->
-						<div id="image_upload" class="drawmode_options">
+						<div id="image_upload" class="drawmode_options inputline">
 							!!!NOT IMPLEMENTED YET!!!
 							<img id="input_img">
 							<input id="img_input" type="file" name="img" onchange="onFileSelected(event)">
 						</div>
 						
 					</div>
-					<br>
+					<br><br><br>
 					<!--<button onclick="refresh()">DRAW</button>-->
 					<!-- SAVE -->
 					<div id="save" class="submenu">
