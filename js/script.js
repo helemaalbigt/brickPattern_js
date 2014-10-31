@@ -40,7 +40,7 @@ var imageUploaded = false;
 var img = null;
 var imgW = 0;
 var imgH = 0;
-
+//
 //Canvas
 var canvas;
 var ctx;
