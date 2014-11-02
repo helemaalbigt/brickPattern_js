@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<!-- FONTS -->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600,400' rel='stylesheet' type='text/css'>
+		
 		<meta charset="utf-8">
 
 		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
@@ -33,7 +36,7 @@
 		<!-- SIDEBAR -->
 		<div id="sidebar_wrapper">
 			<div id="sidebar">
-				<h1>brickpatterns</h1>
+				<h1><span>MATERIAL</span><span class="secondpart">PATTERNS</span></h1>
 				<div id="menu">
 					
 					<!-- TABS -->
@@ -54,7 +57,7 @@
 							</span>
 						</div>
 						<div class="inputline">
-							<span title="(width x height) the brick dimensions" class="linetitle">bricks</span> 
+							<span title="(width x height) the brick dimensions" class="linetitle">material</span> 
 							<span class="inputpart">
 								<input class="input smallinput" type="text" name="bw" id="bw" value="60">
 								<span class="small_info">x</span> <input class="input smallinput" type="text" name="bh" id="bh" value="14">
@@ -70,32 +73,50 @@
 						</div>
 						<br>
 						<div class="inputline">
-							<span title="(color + thickness) the color and thickness of the joint. Set to 0 for no joint" class="linetitle">joint</span> 
+							<span title="(color + thickness) the color and thickness of the joint. Set to 0 for no joint" class="linetitle">joints</span> 
 							<span class="inputpart">
-								<span class="color-box-joints"></span>
+								
 								<span class="small_info">t: </span><input class="input smallinput" type="text" name="jt" id="jt" value="1">
 								<span class="small_info"> cm</span>
 							</span>
 						</div>
-						<div>
-							<span></span>
-							
+						<div class="inputline">
+							<span class="inputpart">
+								<span class="small_info">color: </span><span class="color-box-joints"></span>
+							</span>
 						</div>
 					</div>
+					
+					<br><br>
 					
 					
 					<!-- COLOR SELECTION -->
 					<div id="color_selection" class="submenu">
-						<h3>color pattern</h3>
-						<span>n° colors</span>
-						<select id="nc" class="input" >
-							<option value="1" >1</option>
-							<option value="2" >2</option>
-							<option value="3" selected>3</option>
-							<option value="4" >4</option>
-							<option value="5" >5</option>
-							<option value="6" >6</option>
-						</select>
+						<h3>pattern: 						
+							<select class="input" id="drawmode">
+								<option><h3>uniform</h3></option>
+								<option selected><h3>random</h3></option>
+								<option><h3>perlin noise</h3></option>
+								<option><h3>gradient</h3></option>
+								<option><h3>photo reference</h3></option>
+							</select>
+						</h3>
+						
+						<div class="inputline">
+							<span>n° colors</span>
+							<span class="inputpart">
+								<select id="nc" class="input" >
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+									<option value="3" selected>3</option>
+									<option value="4" >4</option>
+									<option value="5" >5</option>
+									<option value="6" >6</option>
+								</select>
+							</span>
+							<br>
+						</div>
+							
 						<div id="colors">
 							<div class="color-box"></div>
 							<div class="color-box"></div>
@@ -104,49 +125,86 @@
 							<div class="color-box"></div>
 							<div class="color-box"></div>
 						</div>
+						<br>
 					</div>
 					<!-- DRAW MODE -->
 					<div class="submenu">
-						<br>
-						<select class="input" id="drawmode">
-							<option>uniform</option>
-							<option selected>random</option>
-							<option>perlin noise</option>
-							<option>gradient</option>
-							<option>photo reference</option>
-						</select>
-						<br><br>
 						
-						<div class="drawmode_options" id="perlin_scale">
+						<!--random options-->
+						<div class="drawmode_options inputline" id="random_options">
+							<span>weights</span>
+							<span class="inputpart">
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c1w" id="cw1" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c2w" id="cw2" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c3w" id="cw3" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c4w" id="cw4" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c5w" id="cw5" value="100">
+									<span class="small_info"> %</span>
+								</div>
+								<div class="color-box-weights">
+									<span class="color-box-weights_preview"></span>
+									<input class="input smallinput" type="text" name="c6w" id="cw6" value="100">
+									<span class="small_info"> %</span>
+								</div>				
+							</span>			
+						</div>
+						
+						<!--perlin options-->
+						<div class="drawmode_options inputline" id="perlin_scale">
 							<span>scale</span>
-							<input class="input smallinput" type="text" name="pScale" id="pScale" value="5">
+							<span class="inputpart">
+								<input class="input smallinput" type="text" name="pScale" id="pScale" value="5">
+							</span>
 						</div>
 						
-						<div class="drawmode_options" id="gradient_direction">
+						<!--gradient options-->
+						<div class="drawmode_options inputline" id="gradient_direction">
 							<span>direction</span>
-							<select class="input" id="gradientDirection">
-								<option selected>horizontal</option>
-								<option>vertical</option>
-								<option>diagonal down</option>
-								<option>diagonal up</option>
-							</select>
+							<span class="inputpart">
+								<select class="input" id="gradientDirection">
+									<option selected>horizontal</option>
+									<option>vertical</option>
+									<option>diagonal down</option>
+									<option>diagonal up</option>
+								</select>
+							</span>
 						</div>
 						
-						<div class="drawmode_options" id="gradient_margin">
+						<div class="drawmode_options inputline" id="gradient_margin">
 							<span>margin</span>
-							<input class="input smallinput" type="text" name="em" id="em" value="0">
-							<span> cm</span>
+							<span class="inputpart">
+								<input class="input smallinput" type="text" name="em" id="em" value="0">
+								<span class="small_info"> cm</span>
+							</span>
 						</div>
 						
 						<!-- IMAGE UPLOAD-->
-						<div id="image_upload" class="drawmode_options">
+						<div id="image_upload" class="drawmode_options inputline">
 							!!!NOT IMPLEMENTED YET!!!
 							<img id="input_img">
 							<input id="img_input" type="file" name="img" onchange="onFileSelected(event)">
 						</div>
 						
 					</div>
-					<br>
+					<br><br><br>
 					<!--<button onclick="refresh()">DRAW</button>-->
 					<!-- SAVE -->
 					<div id="save" class="submenu">
