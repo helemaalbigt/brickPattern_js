@@ -1,8 +1,8 @@
-body, html{
-	bottom: 0;
-	//font-family: "Arial";
+body, html {
+	bottom: 0;//
+	font-family: "Arial";
 	font-family: 'Open Sans', sans-serif;
-	font-weight: 300; 
+	font-weight: 300;
 	left: 0;
 	padding: 0;
 	position: absolute;
@@ -10,24 +10,24 @@ body, html{
 	top: 0;
 }
 
-h1,h2,h3{
+h1, h2, h3 {
 	font-family: 'Open Sans', sans-serif;
-	font-weight: 600; 
-	font-size:19px;
+	font-weight: 600;
+	font-size: 19px;
 }
 
-h1{
+h1 {
 	font-weight: 300;
-	font-size:26.5px;
+	font-size: 26.5px;
 }
 
-h1 .secondpart{
+h1 .secondpart {
 	font-weight: 600;
 }
 
 .color-box {
 	float: left;
-	width: 30px;
+	width: 28px;
 	height: 15px;
 	margin: 5px 5px 5px 0;
 	border: 1px solid black;
@@ -150,23 +150,63 @@ ul#navigation {
 
 select#drawmode {
 	font-family: 'Open Sans', sans-serif;
-	font-weight: 300; 
-	border:none;
-	font-size:19px;
+	font-weight: 300;
+	border: none;
+	font-size: 19px;
 }
 
-#drawmode option{
+#drawmode option {
 	font-family: 'Open Sans', sans-serif;
-	font-weight: 300; 
-	font-size:19px;
-	padding-right:10px;
+	font-weight: 300;
+	font-size: 19px;
+	padding-right: 10px;
 }
 
-h3{
+h3 {
 
 }
 
-.color-box-weights{
-	float:left;
-	clear:both;
+.color-box-weights {
+	float: left;
+	margin: 5px 5px 5px 0;
+	height: 120px;
+	width: 30px;
+}
+
+.smallinput_weight {
+	width: 28px;
+	margin-right: 5px;
+	border: none;
+	border-bottom: solid 1px lightgray;
+	clear: both;
+	float: left;
+	text-align: center;
+}
+
+input.vertical {
+	-webkit-appearance: slider-vertical;
+	writing-mode: bt-lr;
+	float: left;
+	margin: 0 5px 5px 0px;
+	padding: 0;
+	height:100%;
+	width: 100%;
+}
+
+.percentage{
+	float: left;
+    display: block;
+    height: 146px;
+    margin: 5px 0 0;
+    position: relative;
+    width: 28px;
+}
+
+.percentage span{
+	position:absolute;
+	bottom:0px;
+}
+
+#save{
+	margin-top:20px;
 }

@@ -153,6 +153,34 @@ $(document).ready(function() {
 		refresh();
 	};
 	
+	/*
+	 * Add event listener to sliders and colorweightinput
+	 */
+	$('.vertical').each(function() {
+		//change the inputvalue when handeling slider
+  		$(this).on('input', function() {
+ 			$(this).next().attr( "value", $(this).val() );
+			$(this).next().val( $(this).val() );
+		});
+		
+		//update once slider is released
+		$(this).change(function(){
+			updateParameters();
+			refresh();
+		});
+	});
+	
+	/*
+	 * Add event listeners to each colorweightinput
+	 */
+	$(".smallinput_weight").each(function(){
+		$(this).change(function(){
+			$(this).prev().val($(this).val());
+			updateParameters();
+			refresh();
+		});
+	});
+	
 	refresh();
 });
 

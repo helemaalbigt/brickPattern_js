@@ -132,40 +132,33 @@
 						
 						<!--random options-->
 						<div class="drawmode_options inputline" id="random_options">
-							<span>weights</span>
-							<span class="inputpart">
-								<div class="color-box-weights">
-									<span class="color-box-weights_preview"></span>
-									<input class="input smallinput" type="text" name="c1w" id="cw1" value="100">
-									<span class="small_info"> %</span>
-								</div>
-								<div class="color-box-weights">
-									<span class="color-box-weights_preview"></span>
-									<input class="input smallinput" type="text" name="c2w" id="cw2" value="100">
-									<span class="small_info"> %</span>
-								</div>
-								<div class="color-box-weights">
-									<span class="color-box-weights_preview"></span>
-									<input class="input smallinput" type="text" name="c3w" id="cw3" value="100">
-									<span class="small_info"> %</span>
-								</div>
-								<div class="color-box-weights">
-									<span class="color-box-weights_preview"></span>
-									<input class="input smallinput" type="text" name="c4w" id="cw4" value="100">
-									<span class="small_info"> %</span>
-								</div>
-								<div class="color-box-weights">
-									<span class="color-box-weights_preview"></span>
-									<input class="input smallinput" type="text" name="c5w" id="cw5" value="100">
-									<span class="small_info"> %</span>
-								</div>
-								<div class="color-box-weights">
-									<span class="color-box-weights_preview"></span>
-									<input class="input smallinput" type="text" name="c6w" id="cw6" value="100">
-									<span class="small_info"> %</span>
-								</div>				
-							</span>			
+							<span class="color-box-weights">
+								<input type="range" min="0" max="100" value="" class="vertical" orient="vertical">
+								<input class="input smallinput_weight" type="text" name="c1w" id="cw1" value="50">
+							</span>
+							<span class="color-box-weights">
+								<input type="range" min="0" max="100" value="50" class="vertical" orient="vertical">
+								<input class="input smallinput_weight" type="text" name="c2w" id="cw2" value="50">
+							</span>
+							<span class="color-box-weights">
+								<input type="range" min="0" max="100" value="50" class="vertical" orient="vertical">
+								<input class="input smallinput_weight" type="text" name="c3w" id="cw3" value="50">
+							</span>
+							<span class="color-box-weights">
+								<input type="range" min="0" max="100" value="50" class="vertical" orient="vertical">
+								<input class="input smallinput_weight" type="text" name="c4w" id="cw4" value="50">
+							</span>
+							<span class="color-box-weights">
+								<input type="range" min="0" max="100" value="50" class="vertical" orient="vertical">
+								<input class="input smallinput_weight" type="text" name="c5w" id="cw5" value="50">
+							</span>
+							<span class="color-box-weights">
+								<input type="range" min="0" max="100" value="50" class="vertical" orient="vertical">
+								<input class="input smallinput_weight" type="text" name="c6w" id="cw6" value="50">
+							</span>		
+							<span class="small_info percentage"><span>%</span></span>		
 						</div>
+						<br><br>
 						
 						<!--perlin options-->
 						<div class="drawmode_options inputline" id="perlin_scale">
