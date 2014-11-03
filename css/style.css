@@ -8,6 +8,7 @@ body, html {
 	position: absolute;
 	right: 0;
 	top: 0;
+	background-color:rgb(240,240,240);
 }
 
 h1, h2, h3 {
@@ -29,7 +30,7 @@ h1 .secondpart {
 	float: left;
 	width: 28px;
 	height: 15px;
-	margin: 5px 5px 5px 0;
+	margin: 5px 0px 5px -1px;
 	border: 1px solid black;
 	display: block;
 	cursor: pointer;
@@ -56,7 +57,6 @@ h1 .secondpart {
 .smallinput {
 	width: 40px;
 	border: none;
-	border-bottom: solid 1px lightgray;
 }
 
 #sidebar_wrapper {
@@ -85,10 +85,16 @@ h1 .secondpart {
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
+	background-color:white;
+	position: relative;
 }
 
 .buttonlink {
 
+}
+
+select.input{
+	border:none;
 }
 
 .buttonlink:hover {
@@ -131,7 +137,6 @@ ul#navigation {
 }
 
 .inputpart {
-	clear: both;
 	float: right;
 }
 
@@ -140,7 +145,7 @@ ul#navigation {
 }
 
 .smallinput {
-	text-align: right;
+	text-align: center;
 }
 
 .small_info {
@@ -153,6 +158,8 @@ select#drawmode {
 	font-weight: 300;
 	border: none;
 	font-size: 19px;
+	background-color: rgb(240, 240, 240);
+	text-align:center;
 }
 
 #drawmode option {
@@ -168,45 +175,55 @@ h3 {
 
 .color-box-weights {
 	float: left;
-	margin: 5px 5px 5px 0;
+	margin: 0px 0px 30px 0;
 	height: 120px;
 	width: 30px;
 }
 
 .smallinput_weight {
-	width: 28px;
-	margin-right: 5px;
+	width: 25px;
 	border: none;
-	border-bottom: solid 1px lightgray;
 	clear: both;
 	float: left;
 	text-align: center;
+	margin:4px 0;
 }
 
 input.vertical {
 	-webkit-appearance: slider-vertical;
 	writing-mode: bt-lr;
 	float: left;
-	margin: 0 5px 5px 0px;
 	padding: 0;
 	height:100%;
 	width: 100%;
-}
-
-.percentage{
-	float: left;
-    display: block;
-    height: 146px;
-    margin: 5px 0 0;
-    position: relative;
-    width: 28px;
-}
-
-.percentage span{
-	position:absolute;
-	bottom:0px;
+	margin:0;
 }
 
 #save{
 	margin-top:20px;
+}
+
+.bottom-title-wrapper{
+	position:relative;
+	display:block;
+	height:147px;
+	float:left;
+}
+
+.bottom-title{
+	position:absolute;
+	bottom:0px;
+}
+
+#random_options{
+	height:145px;
+}
+
+.small_font{
+	font-size:75%;
+	margin:auto;
+}
+
+#canvas{
+	position:absolute;
 }

@@ -167,6 +167,7 @@ $(document).ready(function() {
 		$(this).change(function(){
 			updateParameters();
 			refresh();
+			updateWeightPercentages();
 		});
 	});
 	
@@ -175,14 +176,39 @@ $(document).ready(function() {
 	 */
 	$(".smallinput_weight").each(function(){
 		$(this).change(function(){
-			$(this).prev().val($(this).val());
+			//restrict value between 0 and 100
+			var value = ($(this).val() < 0) ? 0 : $(this).val();	
+			if($(this).val() > 100){
+				//for some reason the shorthand wasn't working for "bigger than"
+				value = 100;
+			}
+			
+			//apply restricted value to its own input
+			$(this).val(value);
+			$(this).attr( "value", value);
+			//apply value to slider
+			$(this).prev().val(value);
 			updateParameters();
 			refresh();
+			updateWeightPercentages();
 		});
 	});
 	
 	refresh();
 });
+
+/*
+ * Updates the percentages of the weihgts
+ */
+function updateWeightPercentages(){
+	var totalWeight = 0;
+	for(var i = 0; i<nc; i++){
+		totalWeight += brickColorWeights[i];
+	}
+	$(".smallinput_weight").each(function(){
+		$(this).next().html(Math.floor(($(this).val() / totalWeight)*100)+"%");
+	});
+}
 
 
 /**
@@ -222,6 +248,10 @@ function fitCanvasToScreen(){
 		scaleFactor = 1;
 	} 
 	ctx.scale(scaleFactor,scaleFactor);
+	
+	//position canvas in center of screen
+	$("#canvas").css('left', ($("#canvas_wrapper").width() / 2) - ( (fw*scaleFactor) / 2 ) );
+	$("#canvas").css('top', ($("#canvas_wrapper").height() / 2) - ( (fh*scaleFactor) / 2 ) );
 }
 
 /**
