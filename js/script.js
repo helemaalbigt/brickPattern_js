@@ -254,6 +254,13 @@ function fitCanvasToScreen(){
 	$("#canvas").css('top', ($("#canvas_wrapper").height() / 2) - ( (fh*scaleFactor) / 2 ) );
 }
 
+/*
+ * Fire fitCanvasToScreen when we resize the window
+ */
+$( window ).resize(function() {
+	refresh();
+});
+
 /**
  *Calculates and draws all bricks 
  */
