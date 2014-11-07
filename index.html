@@ -33,17 +33,22 @@
 	</head>
 
 	<body>
+		
+		<!--popupbox incompatible browser-->
+		<div class="uncompatible_browser">
+			<div class="black">
+				-
+			</div>
+			<div class="message">
+				<span>This application currently only supports <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank">Firefox</a> and <a href="http://www.google.com/chrome/" target="_blank">Chrome</a></br></br>Sorry &nbsp;¯\_(ツ)_/¯</span>
+			</div>
+		</div>
+		
 		<!-- SIDEBAR -->
 		<div id="sidebar_wrapper">
 			<div id="sidebar">
 				<h1><span>MATERIAL</span><span class="secondpart">PATTERNS</span></h1>
 				<div id="menu">
-					
-					<!-- TABS -->
-					<!--<ul id="navigation">
-					    <li><a id="tab1" class="selected" href="javascript:void(0);">Generated</a></li>
-					    <li><a id="tab2" href="javascript:void(0);">Image Based</a></li>
-					</ul>-->
 					
 					<!-- DOCUMENT PRESETS -->
 					<div id="document_presets" class="submenu">
@@ -60,7 +65,7 @@
 							<span title="(width x height) the brick dimensions" class="linetitle">material</span> 
 							<span class="inputpart">
 								<input class="input smallinput" type="text" name="bw" id="bw" value="60">
-								<span class="small_info">x</span> <input class="input smallinput" type="text" name="bh" id="bh" value="14">
+								<span class="small_info">x</span> <input class="input smallinput" type="text" name="bh" id="bh" value="15">
 								<span class="small_info"> cm</span>
 							</span>
 						</div>
@@ -96,9 +101,9 @@
 							<select class="input" id="drawmode">
 								<option><h3>uniform</h3></option>
 								<option selected><h3>random</h3></option>
-								<option><h3>perlin noise</h3></option>
+								<!--<option><h3>perlin noise</h3></option>-->
 								<option><h3>gradient</h3></option>
-								<option><h3>photo reference</h3></option>
+								<!--<option><h3>photo reference</h3></option>-->
 							</select>
 						</h3>
 						
@@ -212,8 +217,9 @@
 					<!--<button onclick="refresh()">DRAW</button>-->
 					<!-- SAVE -->
 					<div id="save" class="submenu">
-						<h3>save</h3>
-						<a class="buttonlink" id="download_png" download="brickpattern.png">PNG &#65516;</a>
+						<h3>download</h3>
+						<a class="buttonlink" id="download_png" download="brickpattern.png">.PNG</a>
+						<a class="buttonlink" id="download_svg" download="brickpattern.png" onclick="alert('.svg downloads coming soon')">.SVG</a>
 					</div>
 				</div>
 			</div>

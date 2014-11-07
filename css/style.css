@@ -86,21 +86,31 @@ h1 .secondpart {
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
-	background-color:rgb(30, 30, 30);
+	background-color:white;
 	position: relative;
 }
 
-.buttonlink {
+a.buttonlink, a.buttonlink:active, a.buttonlink:visited {
+	border:1px solid black;
+	display:block;
+	padding:5px;
+	text-align:center;
+	width:60px;
+	float:left;
+	margin:0 5px 0 0;
+	color:black;
+	text-decoration:none;
+}
 
+a.buttonlink:hover {
+	background-color:white;
+	color:black;
+	text-decoration:none;
+	cursor: pointer;
 }
 
 select.input{
 	border:none;
-}
-
-.buttonlink:hover {
-	cursor: pointer;
-	text-decoration: underline;
 }
 
 ul#navigation {
@@ -227,4 +237,75 @@ input.vertical {
 
 #canvas{
 	position:absolute;
+}
+
+/*
+ * UNCOMPATIBLE BROWSER
+ */
+.uncompatible_browser {
+	display:none;
+	z-index:1000;
+}
+
+/*target IE10*/
+html[data-useragent*='MSIE 10.0'] .uncompatible_browser {
+	display:block;
+}
+
+/*target safari*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	::i-block-chrome,.uncompatible_browser {
+		display:block;
+	}
+}
+
+/*target safari ipad*/
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) {
+	.uncompatible_browser {
+		display:none;
+	}
+}
+
+/*target safari iphone*/
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px){
+	.uncompatible_browser {
+		display:none;
+	}
+}
+
+.uncompatible_browser .black{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	background-color:white;
+	background-color:rgba(0,0,0,0.90);
+	z-index:1000;
+}
+
+.uncompatible_browser .message{
+	position:absolute;
+	font-style:Arial;
+	left:50%;
+	top:50%;
+	margin:-75px 0 0 -150px;
+	background-color: rgb(240,240,240);
+	text-align:center;
+	width:300px;
+	height:150px;
+	z-index:2000;
+}
+
+.uncompatible_browser .message span{
+	position:relative;
+	top:35px;
+	color:black;
+	width:270px;
 }

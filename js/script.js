@@ -14,7 +14,7 @@ var bricks = new Array();
 var bw = 32;//real width of brick in cm
 var bh = 16;//real heigth of brick in cm
 var pxW = 32;//brick absolute width in pixels
-var pxH = 16;//brick absolute height in pixels
+var pxH = 15;//brick absolute height in pixels
 var offset = 0;//offset each row of bricks should have relative to the previous one
 //Joints
 var jt = 1; //joint thickness
@@ -22,9 +22,9 @@ var jc = "#424242"; //joint color
 //Colors
 var brickColors = new Array();//array containing all possible brick colors
 var nc = 6;
-var c1 = "#e0e0e0";
-var c2 = "#b8b8b8";
-var c3 = "#909090";
+var c1 = "#bf6e2c";
+var c2 = "#d99329";
+var c3 = "#e0d379";
 var c4 = "#d52b1e";
 var c5 = "#d52b1e";
 var c6 = "#d52b1e";
