@@ -2,7 +2,10 @@
  * @author Thomas
  */
 
-//GLOBAL VARIABLES
+/********************
+ * GLOBAL VARIABLES	*
+ ********************/
+
 //General
 var scaleFactor = 1;
 //the factor by which we multiply to go from real dimension to pixel dimension
@@ -53,7 +56,11 @@ var imgH = 0;
 var canvas;
 var ctx;
 
-//do everything that needs to be done when document loads
+
+/********************
+ * PAGE SETUP	    *
+ ********************/
+
 $(document).ready(function() {
 	
 	/*
@@ -73,6 +80,7 @@ $(document).ready(function() {
 				$(el).colpickHide();
 				$(el).next().attr("value",'#' + hex);
 				updateParameters();
+				draw();
 			}
 		}).css('background-color', jc);
 		
@@ -99,6 +107,8 @@ $(document).ready(function() {
 				$(el).colpickHide();
 				$(el).next().attr("value",'#' + hex);
 				updateParameters();
+				updateBrickColors();
+				draw();
 			}
 		}).css('background-color', brickColors[colorboxcounter]);
 		
@@ -121,6 +131,7 @@ $(document).ready(function() {
 	 */
 	$( ".input" ).change(function() {
   		updateParameters();
+  		recalc();
 	});
 	updateParameters();
 	
@@ -141,7 +152,7 @@ $(document).ready(function() {
 	function downloadImage() {
 		//reset and redraw canvas to full size
 		prepareCanvas();
-		drawBricks();
+		calcPositions();
 		
 		var canvas = document.getElementById("canvas");
 		var fileName = "brickpattern";
@@ -150,7 +161,7 @@ $(document).ready(function() {
 		this.href = dt;
 		
 		//redraw back to small size
-		refresh();
+		recalc();
 	};
 	
 	/*
@@ -166,7 +177,8 @@ $(document).ready(function() {
 		//update once slider is released
 		$(this).change(function(){
 			updateParameters();
-			refresh();
+			calcColors();
+			draw();	
 			updateWeightPercentages();
 		});
 	});
@@ -189,36 +201,32 @@ $(document).ready(function() {
 			//apply value to slider
 			$(this).prev().val(value);
 			updateParameters();
-			refresh();
+			calcColors();
+			draw();	
 			updateWeightPercentages();
 		});
 	});
 	
-	refresh();
+	//draw for the first time
+	recalc();
 });
 
-/*
- * Updates the percentages of the weihgts
- */
-function updateWeightPercentages(){
-	var totalWeight = 0;
-	for(var i = 0; i<nc; i++){
-		totalWeight += brickColorWeights[i];
-	}
-	$(".smallinput_weight").each(function(){
-		$(this).next().html(Math.floor(($(this).val() / totalWeight)*100)+"%");
-	});
-}
 
+/****************************
+ * 							*
+ * DRAWING 					*
+ * 							*
+ ****************************/
 
 /**
  *Main Refresh function, used to generate and draw the bricks 
  */
-function refresh() {
-	//updateParameters();
+function recalc() {
 	prepareCanvas();
 	fitCanvasToScreen();	
-	drawBricks();	
+	calcPositions();
+	calcColors();
+	draw();	
 }
 
 /**
@@ -258,13 +266,14 @@ function fitCanvasToScreen(){
  * Fire fitCanvasToScreen when we resize the window
  */
 $( window ).resize(function() {
-	refresh();
+	fitCanvasToScreen();
+	draw();	
 });
 
 /**
- *Calculates and draws all bricks 
+ * Calculates all brick positions and sizes 
  */
-function drawBricks(){
+function calcPositions(){
 	console.log("----------------");
 	//Calculate brick positions
 	//calculate the offset to be used
@@ -273,149 +282,52 @@ function drawBricks(){
 	//generate all the bricks
 	for(var h =0; h<fh; h+=bh){
 		for(var w =0; w<fw+bw; w+=bw){
-			var b = new Brick(w - osTotal, h, bw, bh, pickColor(w-osTotal,h));
-			b.draw();
+			//var b = new Brick(w - osTotal, h, bw, bh, pickColor(w-osTotal,h)); 
+			var b = new Brick(w - osTotal, h, bw, bh, brickColors[0], 0);
+			bricks.push(b);
 		}
 		//handle offset Total counter
 		osTotal = (osTotal+os<(bw)) ? (osTotal+os) : 0;
 	}
 }
 
-/**
- *Updates all parameter 
+/*
+ * Calculates all colors for the bricks
  */
-function updateParameters(){
-	/*
-	 *INPUT DATA 
-	 */
-	
-	//if handeling images, preserve aspect ration
-	if(imageUploaded && drawmode == "photo reference"){
-		//check whether width or height was adjusted
-		if(fw!=$('#fw').val()){
-			fh = fh*(parseInt($('#fw').val())/fw);
-			fw = parseInt($('#fw').val());
-			//change input box value
-			$( "#fh" ).attr( "value", fh );
-			$( "#fh" ).val( fh );
-		} 
-		//if not set dilmensions to given input
-		else if(fh!=$('#fh').val()){
-			fw = fw*(parseInt($('#fh').val())/fh);
-			fh = parseInt($('#fh').val());
-			//change input box value
-			$( "#fw" ).attr( "value", fw );
-			$( "#fw" ).val( fw );
-		}	
-	} else{
-		fw = parseInt($('#fw').val());
-		fh = parseInt($('#fh').val());
+function calcColors(){
+	for(var i = 0; i<bricks.length; i++){
+		var pickedColor = pickColor(bricks[i].xPos,bricks[i].yPos);
+		bricks[i].c = pickedColor[0];
+		bricks[i].cIndex = pickedColor[1];
 	}
-	
-	bw = parseInt($('#bw').val());
-	bh = parseInt($('#bh').val());
-	offset = parseInt($('#offset').val());
-	
-	//joints
-	jt = parseInt($('#jt').val());
-	jc = $('#jc').val();
-	
-	//brick colors
-	nc = parseInt($('#nc').val());
-	brickColors[0] = $('#c1').val();
-	brickColors[1] = $('#c2').val();
-	brickColors[2] = $('#c3').val();
-	brickColors[3] = $('#c4').val();
-	brickColors[4] = $('#c5').val();
-	brickColors[5] = $('#c6').val();
-	
-	drawmode = $('#drawmode').val();
-	
-	brickColorWeights[0] = parseInt($('#cw1').val());
-	brickColorWeights[1] = parseInt($('#cw2').val());
-	brickColorWeights[2] = parseInt($('#cw3').val());
-	brickColorWeights[3] = parseInt($('#cw4').val());
-	brickColorWeights[4] = parseInt($('#cw5').val());
-	brickColorWeights[5] = parseInt($('#cw6').val());
-	pScale = parseInt($('#pScale').val());
-	em = parseInt($('#em').val());
-	gradientDirection = $('#gradientDirection').val()
-	
-	/*
-	 * VISIBILITY
-	 */
-	
-	//handke visibility for drawmode options
-	$('.drawmode_options').each(function() {
-		$(this).hide();
-	});
-	//make elements visible based on selected
-	switch (drawmode) { 
-		case 'random':
-			$("#random_options").show();
-			break;
-		
-	    case 'gradient': 
-	    	$("#gradient_direction").show();
-	    	$("#gradient_margin").show();
-	    	break;
-	    	
-	    case 'perlin noise': 
-	    	$("#perlin_scale").show();
-	    	//$("#gradient_margin").show();
-	    	break;
-	    	
-	   	case 'photo reference': 
-	    	$("#image_upload").show();
-	    	break;
-	    	
-	}
-	//updates colors of the weight boxes in the random option
-	updateColorWeightBoxes();
-	
-	refresh();
 }
 
 /*
- * Updates colors of all color weight boxes
+ * Update all brick colors
  */
-function updateColorWeightBoxes(){
-	var counter = 0;
-	$('.color-box-weights_preview').each(function() {
-		$(this).css('background-color', brickColors[counter]);
-		counter++;
-	});
+function updateBrickColors(){
+	for(var i = 0; i<bricks.length; i++){
+		bricks[i].c = brickColors[bricks[i].cIndex];
+	}
+}
+
+/*
+ * Draws all bricks to the canvas
+ */
+function draw(){
+	for(var i = 0; i<bricks.length; i++){
+		bricks[i].draw();
+	}
 }
 
 /**
- * Hides unused pickcolors (and the random weight counterpart)
- */
-function updateColorpickers(){
-	var numItems = $('.yourclass').length
-	
-	var c = 0;
-	$('.color-box').each(function() {
-		var display = (c<nc) ? "block" : "none";
-		$(this).css("display", display);
-		c++;	
-	});
-	
-	c = 0;
-	$('.color-box-weights').each(function() {
-		var display = (c<nc) ? "block" : "none";
-		$(this).css("display", display);
-		c++;	
-	});
-}
-
-
-/**
- *Updates all parameter s
+ * Pick color based on pattern type and brick position
  * 
  * @return String Color in hex format
  */
 function pickColor(w,h){
 	var returnString = "";
+	var returnArray = new Array();
 	
 	switch (drawmode) { 
 	    case 'random': 
@@ -424,8 +336,10 @@ function pickColor(w,h){
 	    	for(var i = 0; i<nc; i++){
 	    		reducedWeightsArray.push(brickColorWeights[i]); 
 	    	}
-	    	returnString = brickColors[pickWeightedRandom(reducedWeightsArray)];
-	        //returnString = brickColors[Math.floor(Math.random() * (nc))];
+	    	
+	    	var index = pickWeightedRandom(reducedWeightsArray);
+	    	returnString = brickColors[index];
+	        returnArray.push(brickColors[index], index);
 	        break;
 	        
 	    case 'perlin noise' :
@@ -434,27 +348,38 @@ function pickColor(w,h){
 	    	var y = h/fh; // normalize h
 			var size = pScale;  // pick a scaling value
 			var n = PerlinNoise.noise( size*x, size*y, .8 );
-			returnString = gradientGetColor(1,n,em);
+			
+			var index = gradientGetColor(1,n,em);
+			returnString = brickColors[index];
+	        returnArray.push(brickColors[index], index);
 	    	break;
 	    	
 	    case 'gradient':
 	    	//check direction
 	    	switch(gradientDirection) {
 	    		case 'vertical':
-	    			returnString = gradientGetColor(fh,h,em);
+	    			var index = gradientGetColor(fh,h,em);
+	    			returnString = brickColors[index];
+	       			returnArray.push(brickColors[index], index);
 	    			break;
 	    			
 	    		case 'diagonal down':
-	    			returnString = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow(h, 2)),em);
+	    			var index = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow(h, 2)),em);
+	    			returnString = brickColors[index];
+	       			returnArray.push(brickColors[index], index);
 	    			break;
 	    		
 	    		case 'diagonal up':
-	    			returnString = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow((fh-h), 2)),em);
+	    			var index = gradientGetColor(Math.sqrt(Math.pow(fw, 2) + Math.pow(fh, 2)),Math.sqrt(Math.pow(w, 2) + Math.pow((fh-h), 2)),em);
+	    			returnString = brickColors[index];
+	       			returnArray.push(brickColors[index], index);
 	    			break;
 	    		
 	    		default:
 	    			//horizontal gradient by default
-	    			returnString = gradientGetColor(fw,w,em);
+	    			var index = gradientGetColor(fw,w,em);
+	    			returnString = brickColors[index];
+	       			returnArray.push(brickColors[index], index);
 	    			break;
 	    	}
 	    	break;
@@ -462,10 +387,11 @@ function pickColor(w,h){
 	    default:
 	    	//uniform by default
 	        returnString = brickColors[0];
+	        returnArray.push(brickColors[0], 0);
 	        break;
 	}
 	
-	return returnString;
+	return returnArray;
 }
 
 /**
@@ -526,9 +452,9 @@ function gradientGetColor(L,w,edgeMargin){
 			}
 		}
 		
-		return brickColors[pickWeightedRandom(colorWeights)];
+		return pickWeightedRandom(colorWeights);
 	} else{
-		return brickColors[0];
+		return 0;
 	}
 }
 
@@ -597,11 +523,161 @@ function onFileSelected(event) {
 			$( "#fh" ).attr( "value", fh );
 			$( "#fh" ).val( fh );
 			
-			refresh();
+			recalc();
 		}
 	};
 	reader.readAsDataURL(selectedFile);
 }
+
+
+
+
+/****************************
+ * 							*
+ * UPDATING PARAMETERS 		*
+ * 							*
+ ****************************/
+
+/*
+ * Updates the percentages of the color weights
+ */
+function updateWeightPercentages(){
+	var totalWeight = 0;
+	for(var i = 0; i<nc; i++){
+		totalWeight += brickColorWeights[i];
+	}
+	$(".smallinput_weight").each(function(){
+		$(this).next().html(Math.floor(($(this).val() / totalWeight)*100)+"%");
+	});
+}
+
+
+/**
+ *Updates all parameter 
+ */
+function updateParameters(){
+	/*
+	 *INPUT DATA 
+	 */
+	
+	//if handeling images, preserve aspect ration
+	if(imageUploaded && drawmode == "photo reference"){
+		//check whether width or height was adjusted
+		if(fw!=$('#fw').val()){
+			fh = fh*(parseInt($('#fw').val())/fw);
+			fw = parseInt($('#fw').val());
+			//change input box value
+			$( "#fh" ).attr( "value", fh );
+			$( "#fh" ).val( fh );
+		} 
+		//if not set dilmensions to given input
+		else if(fh!=$('#fh').val()){
+			fw = fw*(parseInt($('#fh').val())/fh);
+			fh = parseInt($('#fh').val());
+			//change input box value
+			$( "#fw" ).attr( "value", fw );
+			$( "#fw" ).val( fw );
+		}	
+	} else{
+		fw = parseInt($('#fw').val());
+		fh = parseInt($('#fh').val());
+	}
+	
+	bw = parseInt($('#bw').val());
+	bh = parseInt($('#bh').val());
+	offset = parseInt($('#offset').val());
+	
+	//joints
+	jt = parseInt($('#jt').val());
+	jc = $('#jc').val();
+	
+	//brick colors
+	nc = parseInt($('#nc').val());
+	brickColors[0] = $('#c1').val();
+	brickColors[1] = $('#c2').val();
+	brickColors[2] = $('#c3').val();
+	brickColors[3] = $('#c4').val();
+	brickColors[4] = $('#c5').val();
+	brickColors[5] = $('#c6').val();
+	
+	drawmode = $('#drawmode').val();
+	
+	brickColorWeights[0] = parseInt($('#cw1').val());
+	brickColorWeights[1] = parseInt($('#cw2').val());
+	brickColorWeights[2] = parseInt($('#cw3').val());
+	brickColorWeights[3] = parseInt($('#cw4').val());
+	brickColorWeights[4] = parseInt($('#cw5').val());
+	brickColorWeights[5] = parseInt($('#cw6').val());
+	pScale = parseInt($('#pScale').val());
+	em = parseInt($('#em').val());
+	gradientDirection = $('#gradientDirection').val()
+	
+	/*
+	 * MENU VISIBILITY
+	 */
+	//handle visibility for drawmode options
+	$('.drawmode_options').each(function() {
+		$(this).hide();
+	});
+	//make elements visible based on selected
+	switch (drawmode) { 
+		case 'random':
+			$("#random_options").show();
+			break;
+		
+	    case 'gradient': 
+	    	$("#gradient_direction").show();
+	    	$("#gradient_margin").show();
+	    	break;
+	    	
+	    case 'perlin noise': 
+	    	$("#perlin_scale").show();
+	    	//$("#gradient_margin").show();
+	    	break;
+	    	
+	   	case 'photo reference': 
+	    	$("#image_upload").show();
+	    	break;
+	    	
+	}
+	//updates colors of the weight boxes in the random option
+	updateColorWeightBoxes();
+	
+	//recalc();
+}
+
+/*
+ * Updates colors of all color weight boxes
+ */
+function updateColorWeightBoxes(){
+	var counter = 0;
+	$('.color-box-weights_preview').each(function() {
+		$(this).css('background-color', brickColors[counter]);
+		counter++;
+	});
+}
+
+/**
+ * Hides unused pickcolors (and the random weight counterpart)
+ */
+function updateColorpickers(){
+	var numItems = $('.yourclass').length
+	
+	var c = 0;
+	$('.color-box').each(function() {
+		var display = (c<nc) ? "block" : "none";
+		$(this).css("display", display);
+		c++;	
+	});
+	
+	c = 0;
+	$('.color-box-weights').each(function() {
+		var display = (c<nc) ? "block" : "none";
+		$(this).css("display", display);
+		c++;	
+	});
+}
+
 
 
 /********************************************
@@ -613,12 +689,13 @@ function onFileSelected(event) {
  * @param float								*	
  * @param Color								*
  ********************************************/
-function Brick(xPos, yPos, brickW, brickH, c) {
+function Brick(xPos, yPos, brickW, brickH, c, cIndex) {
 	this.xPos = xPos;
 	this.yPos = yPos;
 	this.brickW = brickW;
 	this.brickH = brickH;
-	this.c = c;
+	this.c = c;//hex value of color
+	this.cIndex = cIndex;
 }
 
 /**
