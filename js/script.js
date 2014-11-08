@@ -152,7 +152,8 @@ $(document).ready(function() {
 	function downloadImage() {
 		//reset and redraw canvas to full size
 		prepareCanvas();
-		calcPositions();
+		//calcPositions();
+		draw();
 		
 		var canvas = document.getElementById("canvas");
 		var fileName = "brickpattern";
@@ -161,7 +162,9 @@ $(document).ready(function() {
 		this.href = dt;
 		
 		//redraw back to small size
-		recalc();
+		prepareCanvas();
+		fitCanvasToScreen();
+		draw();
 	};
 	
 	/*

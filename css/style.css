@@ -95,11 +95,14 @@ a.buttonlink, a.buttonlink:active, a.buttonlink:visited {
 	display:block;
 	padding:5px;
 	text-align:center;
-	width:60px;
+	width:110px;
 	float:left;
-	margin:0 5px 0 0;
 	color:black;
 	text-decoration:none;
+}
+
+a.buttonlink:first-of-type{
+	margin:0 5px 0 0;
 }
 
 a.buttonlink:hover {
