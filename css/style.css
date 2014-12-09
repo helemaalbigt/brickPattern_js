@@ -255,6 +255,16 @@ html[data-useragent*='MSIE 10.0'] .uncompatible_browser {
 	display:block;
 }
 
+.uncompatible_browser html[data-useragent*='MSIE 10.0'] {
+      display: block;
+}
+
+ @media \0screen\, screen\9, screen\0, \0screen {
+    .uncompatible_browser {
+        display: block; 
+	} 
+}
+
 /*target safari*/
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 	::i-block-chrome,.uncompatible_browser {
